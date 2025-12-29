@@ -36,7 +36,7 @@ export const routes: Routes = [
             { path: 'dashboard', component: DashboardOverview },
             { path: 'dashboard/create-article', component: ArticleNewPage },
             { path: 'dashboard/article-management', component: ArticleManagementPage },
-            { path: 'dashboard/:id/edit', component: ArticleEditPage },
+            { path: 'dashboard/articles/:id/edit', component: ArticleEditPage },
         ]
     },
     {

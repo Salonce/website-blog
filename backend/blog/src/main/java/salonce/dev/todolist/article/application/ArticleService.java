@@ -61,13 +61,11 @@ public class ArticleService {
     }
 
     @Transactional
-    public ArticleViewResponse deleteArticle(AccountPrincipal principal, Long articleId){
+    public void deleteArticle(AccountPrincipal principal, Long articleId){
         Account account = accountService.findAccount(principal.id());
         if (!account.isAdmin()) throw new AccessDeniedException("Access forbidden.");
         Article article = articleRepository.findById(articleId).orElseThrow(ArticleNotFound::new);
         articleRepository.delete(article);
-
-        return ArticleMapper.toArticleResponse(articleRepository.save(article));
     }
 
 

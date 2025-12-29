@@ -3,6 +3,7 @@ import { Article } from '../../../core/models/article';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { ArticleService } from '../../../core/article-service/article-service';
 
 @Component({
   selector: 'app-article-edit-list',
@@ -11,7 +12,7 @@ import { RouterModule } from '@angular/router';
   styleUrl: './article-edit-list.css'
 })
 export class ArticleEditList {
-  constructor(private sanitizer: DomSanitizer){}
+  constructor(private sanitizer: DomSanitizer, private articleService: ArticleService){}
 
   @Input() articles : Article[] = [];
 
@@ -27,7 +28,13 @@ export class ArticleEditList {
     return this.sanitizer.bypassSecurityTrustHtml(html);
   }
 
-  editArticle(slug: string){}
-
-  deleteArticle(slug: string){}
+  deleteArticle(id: number) {
+    this.articleService.deleteArticle(id).subscribe({
+      next: () => {
+        console.log('Article deleted successfully');
+        this.articles = this.articles.filter(a => a.id !== id);
+      },
+      error: err => console.error('Failed to delete article:', err)
+    });
+  }
 }

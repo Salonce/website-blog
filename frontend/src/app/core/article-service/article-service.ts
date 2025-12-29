@@ -68,4 +68,13 @@ export class ArticleService {
       })
     );
   }
+
+  deleteArticle(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/articles/${id}`, { withCredentials: true }).pipe(
+      catchError(err => {
+        console.error('Failed to delete article', err);
+        return throwError(() => new Error('Could not delete article'));
+      })
+    );
+  }
 }

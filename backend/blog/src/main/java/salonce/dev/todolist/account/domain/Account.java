@@ -53,6 +53,18 @@ public class Account {
         roles.addUserRole();
     }
 
+    public Boolean isAdmin() {
+        return roles.isAdmin();
+    }
+
+    public Boolean isUser() {
+        return roles.isUser();
+    }
+
+    public Boolean isModerator() {
+        return roles.isModerator();
+    }
+
     public void addModeratorRole() {
         roles.addModeratorRole();
     }

@@ -69,15 +69,15 @@ public class Roles {
         removeRole(Role.MODERATOR);
     }
 
-    public boolean hasAdminRole() {
+    public boolean isAdmin() {
         return hasRole(Role.ADMIN);
     }
 
-    public boolean hasUserRole() {
+    public boolean isUser() {
         return hasRole(Role.USER);
     }
 
-    public boolean hasModeratorRole() {
+    public boolean isModerator() {
         return hasRole(Role.MODERATOR);
     }
 

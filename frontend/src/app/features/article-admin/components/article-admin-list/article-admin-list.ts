@@ -1,9 +1,10 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, signal } from '@angular/core';
 import { Article } from '../../../../core/models/article';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ArticleService } from '../../../../core/article-service/article-service';
+
 @Component({
   selector: 'app-article-admin-list',
   imports: [CommonModule, RouterModule],
@@ -11,29 +12,48 @@ import { ArticleService } from '../../../../core/article-service/article-service
   styleUrl: './article-admin-list.css'
 })
 export class ArticleAdminList {
-  constructor(private sanitizer: DomSanitizer, private articleService: ArticleService){}
+  constructor(
+    private sanitizer: DomSanitizer, 
+    private articleService: ArticleService
+  ) {}
 
-  @Input() articles : Article[] = [];
+  @Input() articles: Article[] = [];
+  
+  articleToDelete = signal<number | null>(null);
 
   getPreview(content: string, sentences: number = 3): string {
-    // naive example: split by sentences
     const match = content.match(/.*?[.!?](\s|$)/g);
     if (!match) return content;
     const preview = match.slice(0, sentences).join(' ');
-    return preview; // keep HTML tags intact
+    return preview;
   }
 
   getSafeHtml(html: string): SafeHtml {
     return this.sanitizer.bypassSecurityTrustHtml(html);
   }
 
+  // Show confirmation dialog
+  confirmDelete(id: number) {
+    this.articleToDelete.set(id);
+  }
+
+  // Cancel deletion
+  cancelDelete() {
+    this.articleToDelete.set(null);
+  }
+
+  // Actually delete the article
   deleteArticle(id: number) {
     this.articleService.deleteArticle(id).subscribe({
       next: () => {
         console.log('Article deleted successfully');
         this.articles = this.articles.filter(a => a.id !== id);
+        this.articleToDelete.set(null);
       },
-      error: err => console.error('Failed to delete article:', err)
+      error: err => {
+        console.error('Failed to delete article:', err);
+        this.articleToDelete.set(null);
+      }
     });
   }
 }

@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ArticleService } from '../../../core/article-service/article-service';
+import { ArticleService } from '../../../../core/article-service/article-service';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { NewArticle } from '../../../core/models/new-article';
-import { QuillEditor } from '../quill-editor/quill-editor';
+import { NewArticle } from '../../../../core/models/new-article';
+import { QuillEditor } from '../../components/quill-editor/quill-editor';
 
 @Component({
   selector: 'app-article-edit-page',

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ArticleService } from '../../../core/article-service/article-service';
-import { Article } from '../../../core/models/article';
+import { ArticleService } from '../../../../core/article-service/article-service';
+import { Article } from '../../../../core/models/article';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({

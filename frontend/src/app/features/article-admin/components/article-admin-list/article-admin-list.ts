@@ -1,10 +1,9 @@
 import { Component, Input } from '@angular/core';
-import { Article } from '../../../core/models/article';
+import { Article } from '../../../../core/models/article';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { ArticleService } from '../../../core/article-service/article-service';
-
+import { ArticleService } from '../../../../core/article-service/article-service';
 @Component({
   selector: 'app-article-admin-list',
   imports: [CommonModule, RouterModule],

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AccountService } from '../../../core/account-service/account-service';
-import { Account } from '../../../core/models/account';
+import { AccountService } from '../../../../core/account-service/account-service';
+import { Account } from '../../../../core/models/account';
 @Component({
   selector: 'app-account-edit-page',
   imports: [FormsModule],

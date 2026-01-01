@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { ArticleService } from '../../../core/article-service/article-service';
+import { ArticleService } from '../../../../core/article-service/article-service';
 import { Observable } from 'rxjs/internal/Observable';
-import { Page } from '../../../core/models/page';
-import { Article } from '../../../core/models/article';
+import { Page } from '../../../../core/models/page';
+import { Article } from '../../../../core/models/article';
 import { AsyncPipe } from '@angular/common';
-import { ArticleList } from '../article-list/article-list';
-import { Pagination } from '../../../shared/pagination/pagination';
+import { ArticleList } from '../../article-list/article-list';
+import { Pagination } from '../../../../shared/pagination/pagination';
 @Component({
   selector: 'app-home-page',
   imports: [AsyncPipe, ArticleList, Pagination],

@@ -26,9 +26,12 @@ export class ArticleNewPage {
   };
 
   showConfirmation = signal<boolean>(false);
+  showSuccess = signal<boolean>(false);
+  showError = signal<boolean>(false);
+  isPublishing = signal<boolean>(false);
+  errorMessage = signal<string>('');
 
   onSubmit() {
-    // Show confirmation dialog instead of directly submitting
     this.showConfirmation.set(true);
   }
 
@@ -40,18 +43,35 @@ export class ArticleNewPage {
     console.log('Article object:', this.article);
     console.log('Content value:', this.article.content);
     
+    this.isPublishing.set(true);
+    
     this.articleService.postArticle(this.article).subscribe({
       next: (res) => {
         console.log('New Article:', res);
+        this.isPublishing.set(false);
         this.showConfirmation.set(false);
-        // Optionally navigate to the article list or show success message
-        this.router.navigate(['/dashboard/articles']);
+        this.showSuccess.set(true);
       },
       error: (err) => {
         console.error('Failed to publish article:', err);
+        this.errorMessage.set(err.error?.message || 'An unexpected error occurred while publishing the article.');
+        this.isPublishing.set(false);
         this.showConfirmation.set(false);
+        this.showError.set(true);
       }
     });
   }
 
+  stayOnPage() {
+    this.showSuccess.set(false);
+  }
+
+  goToArticles() {
+    this.showSuccess.set(false);
+    this.router.navigate(['/home']);
+  }
+
+  closeError() {
+    this.showError.set(false);
+  }
 }

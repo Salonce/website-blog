@@ -20,7 +20,8 @@ export class ArticleService {
   getArticles(page: number = 0, size: number = 10): Observable<Page<Article>> {
     const params = new HttpParams()
       .set('page', page.toString())
-      .set('size', size.toString());
+      .set('size', size.toString())
+      .set('sort', 'createdAt,DESC');
 
     return this.http.get<Page<Article>>(this.apiUrl + '/articles', { 
         params, 

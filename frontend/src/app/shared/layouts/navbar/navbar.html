@@ -1,39 +1,80 @@
-<nav class="bg-amber-200 shadow-md">
+<nav class="bg-white shadow-lg sticky top-0 z-50">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex justify-between h-16 items-center">
-      
+    <div class="flex justify-between items-center h-16">
+
       <!-- Logo / Brand -->
       <div class="flex-shrink-0">
-        <a [routerLink]="['/home']" class="text-lg font-bold text-gray-800">Home</a>
+        <a [routerLink]="['/home']"
+           class="text-2xl font-bold text-gray-900 hover:text-amber-500 transition-colors cursor-pointer">
+          Home
+        </a>
       </div>
 
-      <!-- Links -->
-      <div class="hidden md:flex space-x-6">
+      <!-- Desktop Links -->
+      <div class="hidden md:flex items-center space-x-4">
         @if (principal$ | async; as principal) {
-              @if (principal.roles.includes('ADMIN')) {
-                <a 
-                  [routerLink]="['/dashboard']"
-                  class="text-gray-800 hover:text-gray-600 transition-colors"
-                >
-                  Dashboard
-                </a>
-              }
-          <a [routerLink]="['/settings']" class="text-gray-800 hover:text-gray-600 transition-colors">Settings</a>
-          <a href="#/" (click)="onLogout(); $event.preventDefault()" class="text-gray-800 hover:text-gray-600 transition-colors">Log out</a>
+          @if (principal.roles.includes('ADMIN')) {
+            <a [routerLink]="['/dashboard']"
+               class="px-3 py-2 rounded-md text-gray-800 hover:bg-amber-100 hover:text-amber-600 transition cursor-pointer">
+              Dashboard
+            </a>
+          }
+          <a [routerLink]="['/settings']"
+             class="px-3 py-2 rounded-md text-gray-800 hover:bg-amber-100 hover:text-amber-600 transition cursor-pointer">
+            Settings
+          </a>
+          <button (click)="onLogout()"
+                  class="px-3 py-2 rounded-md text-gray-800 hover:bg-amber-100 hover:text-amber-600 transition cursor-pointer">
+            Log out
+          </button>
         } @else {
-          <a href="/oauth2/authorization/google" class="text-gray-800 hover:text-gray-600 transition-colors">Log in</a>
+          <a href="/oauth2/authorization/google"
+             class="px-3 py-2 rounded-md text-gray-800 hover:bg-amber-100 hover:text-amber-600 transition cursor-pointer">
+            Log in
+          </a>
         }
       </div>
 
-      <!-- Hamburger (for mobile) -->
-      <div class="md:hidden">
-        <button class="text-gray-800 hover:text-gray-600 focus:outline-none">
+      <!-- Mobile menu button -->
+      <div class="md:hidden flex items-center">
+        <button (click)="isOpen = !isOpen"
+                class="text-gray-800 hover:text-amber-500 focus:outline-none cursor-pointer">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M4 6h16M4 12h16M4 18h16"/>
           </svg>
         </button>
       </div>
+
     </div>
   </div>
+
+  <!-- Mobile menu -->
+  @if (isOpen) {
+    <div class="md:hidden">
+      <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white shadow-inner">
+        @if (principal$ | async; as principal) {
+          @if (principal.roles.includes('ADMIN')) {
+            <a [routerLink]="['/dashboard']"
+               class="block px-3 py-2 rounded-md text-gray-800 hover:bg-amber-100 hover:text-amber-600 transition cursor-pointer">
+              Dashboard
+            </a>
+          }
+          <a [routerLink]="['/settings']"
+             class="block px-3 py-2 rounded-md text-gray-800 hover:bg-amber-100 hover:text-amber-600 transition cursor-pointer">
+            Settings
+          </a>
+          <button (click)="onLogout()"
+                  class="block w-full text-left px-3 py-2 rounded-md text-gray-800 hover:bg-amber-100 hover:text-amber-600 transition cursor-pointer">
+            Log out
+          </button>
+        } @else {
+          <a href="/oauth2/authorization/google"
+             class="block px-3 py-2 rounded-md text-gray-800 hover:bg-amber-100 hover:text-amber-600 transition cursor-pointer">
+            Log in
+          </a>
+        }
+      </div>
+    </div>
+  }
 </nav>

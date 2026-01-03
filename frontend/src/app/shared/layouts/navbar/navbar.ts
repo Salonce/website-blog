@@ -13,6 +13,8 @@ import { Principal } from '../../../core/models/principal';
 })
 export class Navbar {
 
+  isOpen = false;
+  
   principal$: Observable<Principal | null>;
 
   constructor(private authService: AuthService){

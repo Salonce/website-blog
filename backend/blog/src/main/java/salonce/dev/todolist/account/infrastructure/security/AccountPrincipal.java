@@ -6,4 +6,4 @@ public record AccountPrincipal(
         Long id,
         String email,
         Set<String> roles
-) {}
+){}

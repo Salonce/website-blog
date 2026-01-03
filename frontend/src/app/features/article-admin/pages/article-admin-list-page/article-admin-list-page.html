@@ -2,7 +2,7 @@
 
   @if ($articlesPage | async; as page) {
 
-    <app-article-edit-list [articles]="page.content"></app-article-edit-list> >
+    <app-article-admin-list [articles]="page.content"></app-article-admin-list>
     <app-pagination [totalPages]="page.totalPages" [currentPage]="page.number" (pageChange)="loadPage($event)"></app-pagination>
 
   } @else {

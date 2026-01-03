@@ -6,13 +6,12 @@
     @for (article of articles; track article.slug) {
       <a
         class="block bg-white shadow p-5 rounded-xl hover:bg-gray-50 transition border border-gray-200"
-        [href]="'http://localhost:4200/articles/' + article.slug"
-        target="_blank"
+        [routerLink]="['/articles', article.slug]"
       >
 
         <!-- Date (formatted nicely) -->
         <p class="text-sm text-gray-500 mb-2">
-          Published on {{ article.createdAt | date: 'longDate' }} 
+          {{ article.createdAt | date: 'longDate' }} 
           at {{ article.createdAt | date: 'shortTime' }}
         </p>
 
@@ -22,15 +21,19 @@
         </h2>
 
         <!-- First 3 sentences / preview -->
+        <!-- 
         <p
           class="text-gray-700 mb-2 max-w-full break-words whitespace-normal overflow-x-hidden"
           [innerHTML]="getSafeHtml(getPreview(article.content) + '...')">
         </p>
+        -->
 
         <!-- Author -->
+        <!-- 
         <p class="text-sm text-gray-500">
           By {{ article.authorName }}
         </p>
+        -->
       </a>
     }
   </div>

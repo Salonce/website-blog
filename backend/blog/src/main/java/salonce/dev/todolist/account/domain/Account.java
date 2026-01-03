@@ -16,7 +16,6 @@ public class Account {
         this.email = email;
         this.name = name;
         this.addUserRole();
-        this.addAdminRole();
         identities.addIdentity(provider, subject);
     }
 
@@ -52,6 +51,18 @@ public class Account {
 
     public void addUserRole() {
         roles.addUserRole();
+    }
+
+    public Boolean isAdmin() {
+        return roles.isAdmin();
+    }
+
+    public Boolean isUser() {
+        return roles.isUser();
+    }
+
+    public Boolean isModerator() {
+        return roles.isModerator();
     }
 
     public void addModeratorRole() {

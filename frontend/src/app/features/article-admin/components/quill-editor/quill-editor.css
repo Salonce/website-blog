@@ -1,0 +1,19 @@
+/* Make the toolbar sticky at the top */
+::ng-deep .ql-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: white;
+  border-bottom: 1px solid #ccc;
+}
+
+/* Set height on the editor container, not the whole component */
+::ng-deep .ql-container {
+  height: 480px;
+  overflow-y: auto;
+}
+
+/* Optional: Remove the fixed height from the quill-editor if needed */
+::ng-deep quill-editor {
+  display: block;
+}

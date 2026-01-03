@@ -1,0 +1,149 @@
+<div class="max-w-5xl mx-auto mt-16 px-4 sm:px-6 lg:px-8">
+  <div class="bg-white shadow-lg rounded-2xl p-6">
+
+    <h2 class="text-3xl font-semibold text-gray-800 mb-8 text-center">Create New Article</h2>
+
+    <form (ngSubmit)="onSubmit()" class="space-y-6">
+
+      <!-- Title -->
+      <div>
+        <label class="block text-gray-500 text-sm mb-2" for="title">Title</label>
+        <input
+          id="title"
+          type="text"
+          [(ngModel)]="article.title"
+          name="title"
+          placeholder="Enter article title"
+          class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-200 focus:border-amber-300 text-lg"
+          required
+        />
+      </div>
+
+      <app-quill-editor
+        [(content)]="article.content">
+      </app-quill-editor>
+
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        class="w-full bg-amber-200 text-gray-800 py-3 rounded-xl font-medium hover:bg-amber-300 transition text-lg"
+      >
+        Publish Article
+      </button>
+
+    </form>
+
+    <!-- Confirmation Dialog -->
+    @if (showConfirmation()) {
+      <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-xl shadow-2xl p-6 max-w-md w-full mx-4">
+          <h3 class="text-2xl font-bold text-gray-900 mb-6 text-center">
+            Publish Article?
+          </h3>
+          <p class="text-gray-600 text-center mb-6">
+            Are you sure you want to publish "<span class="font-medium">{{ article.title }}</span>"?<br>
+            This will make the article visible to all users.
+          </p>
+<div class="flex gap-3 justify-center">
+  <!-- Cancel Button -->
+  <button
+    type="button"
+    (click)="cancelPublish()"
+    [disabled]="isPublishing()"
+    class="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 bg-gray-50 hover:bg-gray-200 transition font-medium disabled:opacity-50 disabled:cursor-not-allowed">
+    Cancel
+  </button>
+
+  <!-- Publish Button -->
+  <button
+    type="button"
+    (click)="confirmPublish()"
+    [disabled]="isPublishing()"
+    class="px-4 py-2 rounded-lg bg-green-500 text-white hover:bg-green-600 transition font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+    @if (isPublishing()) {
+      <svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+      Publishing...
+    } @else {
+      Publish
+    }
+  </button>
+</div>
+        </div>
+      </div>
+    }
+
+    <!-- Success Dialog -->
+    @if (showSuccess()) {
+      <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full mx-4">
+          <!-- Success Icon -->
+          <div class="flex justify-center mb-6">
+            <div class="rounded-full bg-green-100 p-3">
+              <svg class="w-16 h-16 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+            </div>
+          </div>
+          
+          <h3 class="text-2xl font-bold text-gray-900 mb-4 text-center">
+            Article Published Successfully!
+          </h3>
+          
+          <p class="text-gray-600 text-center mb-6">
+            Your article "<span class="font-medium">{{ article.title }}</span>" has been published and is now visible to all users.
+          </p>
+          
+          <div class="flex gap-3">
+            <button
+              type="button"
+              (click)="stayOnPage()"
+              class="flex-1 px-4 py-3 rounded-lg border border-gray-300 text-gray-700 bg-gray-50 hover:bg-gray-200 transition font-medium">
+              Stay Here
+            </button>
+            <button
+              type="button"
+              (click)="goToArticles()"
+              class="flex-1 px-4 py-3 rounded-lg bg-green-600 text-white hover:bg-green-700 transition font-medium">
+              Go to Articles
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- Error Dialog -->
+    @if (showError()) {
+      <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full mx-4">
+          <!-- Error Icon -->
+          <div class="flex justify-center mb-6">
+            <div class="rounded-full bg-red-100 p-3">
+              <svg class="w-16 h-16 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </div>
+          </div>
+          
+          <h3 class="text-2xl font-bold text-gray-900 mb-4 text-center">
+            Failed to Publish Article
+          </h3>
+          
+          <p class="text-gray-600 text-center mb-6">
+            {{ errorMessage() }}
+          </p>
+          
+          <button
+            type="button"
+            (click)="closeError()"
+            class="w-full px-4 py-3 rounded-lg bg-red-600 text-white hover:bg-red-700 transition font-medium">
+            OK
+          </button>
+        </div>
+      </div>
+    }
+
+  </div>
+</div>

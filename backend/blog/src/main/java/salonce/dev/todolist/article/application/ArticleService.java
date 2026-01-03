@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import salonce.dev.todolist.account.application.AccountService;
 import salonce.dev.todolist.account.domain.Account;
@@ -28,11 +29,13 @@ public class ArticleService {
         return articleRepository.findAll(pageable).map(ArticleMapper::toArticleResponse);
     }
 
+    @Transactional
     public ArticleViewResponse getArticle(String slug){
         Article article = articleRepository.findBySlug(slug).orElseThrow(ArticleNotFound::new);
         return ArticleMapper.toArticleResponse(article);
     }
 
+    @Transactional
     public ArticleViewResponse getArticle(Long id){
         Article article = articleRepository.findById(id).orElseThrow(ArticleNotFound::new);
         return ArticleMapper.toArticleResponse(article);
@@ -48,19 +51,23 @@ public class ArticleService {
     @Transactional
     public ArticleViewResponse patchArticle(AccountPrincipal principal, ArticleCreateRequest articleCreateRequest, Long articleId){
         Account account = accountService.findAccount(principal.id());
+        if (!account.isAdmin()) throw new AccessDeniedException("Access forbidden.");
         Article article = articleRepository.findById(articleId).orElseThrow(ArticleNotFound::new);
 
-        // domain rules: check permissions
-        // article.checkPermission(principal);
-
-        // apply patch (domain methods)
         if (articleCreateRequest.title() != null) article.setTitle(articleCreateRequest.title());
         if (articleCreateRequest.content() != null) article.setContent(articleCreateRequest.content());
 
-        articleRepository.save(article);
-
         return ArticleMapper.toArticleResponse(articleRepository.save(article));
     }
+
+    @Transactional
+    public void deleteArticle(AccountPrincipal principal, Long articleId){
+        Account account = accountService.findAccount(principal.id());
+        if (!account.isAdmin()) throw new AccessDeniedException("Access forbidden.");
+        Article article = articleRepository.findById(articleId).orElseThrow(ArticleNotFound::new);
+        articleRepository.delete(article);
+    }
+
 
     private String generateSlug(String title) {
         return title.toLowerCase()

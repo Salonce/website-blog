@@ -2,28 +2,4 @@
 @import "tailwindcss";
 @import 'quill/dist/quill.snow.css';
 
-/* Make paragraphs inside Quill content render with spacing */
-.prose p,
-.prose-lg p {
-  @apply my-4; /* Tailwind margin top/bottom */
-  line-height: 1.7; /* optional for readability */
-}
-
-/* Blockquote indents */
-.prose blockquote {
-  @apply ml-6 pl-4 border-l-4 border-gray-300;
-  color: #4b5563; /* optional text color */
-}
-
-/* List item indents */
-.prose ul li,
-.prose ol li {
-  @apply ml-6;
-}
-
-/* Preserve code / pre formatting */
-.prose pre,
-.prose code {
-  white-space: pre-wrap;
-  word-wrap: break-word;
-}
+@plugin "@tailwindcss/typography";

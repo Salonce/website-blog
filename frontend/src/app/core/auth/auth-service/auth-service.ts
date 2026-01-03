@@ -14,7 +14,7 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   checkAuth() {
-    this.http.get<Principal>('http://localhost:8080/api/auth', { withCredentials: true })
+    this.http.get<Principal>('/api/auth', { withCredentials: true })
       .pipe(
         catchError(() => of(null)) 
       )
@@ -24,7 +24,7 @@ export class AuthService {
   }
 
   logout() {
-    this.http.post('http://localhost:8080/logout', {}, { withCredentials: true })
+    this.http.post('/logout', {}, { withCredentials: true })
       .subscribe({
         next: () => this.principalSubject.next(null),  
         error: () => this.principalSubject.next(null)   

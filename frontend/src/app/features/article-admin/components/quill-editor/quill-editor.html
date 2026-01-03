@@ -1,0 +1,12 @@
+<div>
+  <label class="block text-gray-500 text-sm mb-2" for="content">Content</label>
+  <quill-editor
+    id="content"
+    [(ngModel)]="content"
+    (ngModelChange)="onContentChange($event)"
+    name="content"
+    [modules]="editorModules"
+    placeholder="Write your article here..."
+    class="w-full border border-gray-300 rounded-xl overflow-hidden text-base">
+  </quill-editor>
+</div>

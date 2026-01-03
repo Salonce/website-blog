@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ArticleEditList } from './article-edit-list';
+import { ArticleAdminListPage } from './article-admin-list-page';
 
-describe('ArticleEditList', () => {
-  let component: ArticleEditList;
-  let fixture: ComponentFixture<ArticleEditList>;
+describe('ArticleAdminListPage', () => {
+  let component: ArticleAdminListPage;
+  let fixture: ComponentFixture<ArticleAdminListPage>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ArticleEditList]
+      imports: [ArticleAdminListPage]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ArticleEditList);
+    fixture = TestBed.createComponent(ArticleAdminListPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

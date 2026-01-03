@@ -1,40 +1,80 @@
 services:
   backend:
+    image: backend
+    container_name: backend_spring
     build:
       context: ./backend/blog/
       dockerfile: Dockerfile
-    env_file:
-      - ./backend/blog/.env
+    environment:
+      BLOG_GOOGLE_CLIENT_ID: ${BLOG_GOOGLE_CLIENT_ID}
+      BLOG_GOOGLE_CLIENT_SECRET: ${BLOG_GOOGLE_CLIENT_SECRET}
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "8080:8080"
-    container_name: backend_spring
     networks:
     - blog_network
-
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      
   nginx-static:
+    image: nginx-static
+    container_name: nginx-static
     build:
       context: ./frontend/
       dockerfile: Dockerfile
-    container_name: nginx_static
     ports:
       - "80:80"
+      - "443:443"
     networks:
     - blog_network
+    volumes:
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+      - web-root:/var/www/html
+    depends_on:
+      backend:
+        condition: service_healthy
+    
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+      - web-root:/var/www/html
+    networks:
+    - blog_network
+    command: certonly --webroot --webroot-path=/var/www/html --email your-email@example.com --agree-tos --no-eff-email -d yourdomain.com -d www.yourdomain.com
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew --quiet; sleep 12h & wait $${!}; done;'"
+    
 
   postgres:
     image: postgres:18
-    container_name: blog_postgres
+    container_name: postgres
     environment:
-      POSTGRES_DB: blog
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: yourpassword
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql
     networks:
       - blog_network  
-
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $POSTGRES_USER"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
 
 networks:
   blog_network:
@@ -42,3 +82,10 @@ networks:
 
 volumes:
   pgdata:
+    name: pgdata
+  certbot-etc:
+    name: certbot-etc
+  certbot-var:
+    name: certbot-var
+  web-root:
+    name: web-root

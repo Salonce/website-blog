@@ -2,10 +2,11 @@ import { Component, Input } from '@angular/core';
 import { Article } from '../../../core/models/article';
 import { CommonModule } from '@angular/common';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-article-list',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './article-list.html',
   styleUrl: './article-list.css'
 })

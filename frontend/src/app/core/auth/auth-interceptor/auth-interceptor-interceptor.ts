@@ -2,7 +2,11 @@ import { HttpInterceptorFn, HttpRequest, HttpResponse } from '@angular/common/ht
 import { catchError, of, throwError } from 'rxjs';
 
 export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next) => {
-  return next(req).pipe(
+  const clonedReq = req.clone({
+    withCredentials: true
+  });
+  
+  return next(clonedReq).pipe(
     catchError(err => {
 
       if (req.url.endsWith('/auth') || req.url.endsWith('/logout')) {
@@ -10,7 +14,7 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next) 
       }
 
       if (err.status === 401) {
-        window.location.href = 'http://localhost:8080/oauth2/authorization/google';
+        window.location.href = '/oauth2/authorization/google';
       }
       return throwError(() => err);
     })

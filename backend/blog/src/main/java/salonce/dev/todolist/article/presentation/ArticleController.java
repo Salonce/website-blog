@@ -37,9 +37,17 @@ public class ArticleController {
         return ResponseEntity.ok(articleService.patchArticle(principal, articleCreateRequest, id));
     }
 
+    @DeleteMapping("/api/articles/{id}")
+    public ResponseEntity<Void> deleteArticle(@AuthenticationPrincipal AccountPrincipal principal, @PathVariable Long id){
+        articleService.deleteArticle(principal, id);
+        return ResponseEntity.noContent().build();
+    }
+
     // limit permissions to admin and mod in the service
     @PostMapping("/api/articles")
     public ResponseEntity<ArticleViewResponse> saveArticle(@AuthenticationPrincipal AccountPrincipal principal, @RequestBody ArticleCreateRequest articleCreateRequest){
         return ResponseEntity.ok(articleService.saveArticle(principal, articleCreateRequest));
     }
+
+
 }

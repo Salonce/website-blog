@@ -4,7 +4,6 @@ import { catchError, Observable, throwError } from 'rxjs';
 import { NewArticle } from '../models/new-article';
 import { Page } from '../models/page';
 import { Article } from '../models/article';
-import { ArticleEdit } from '../models/article-edit';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -21,7 +20,8 @@ export class ArticleService {
   getArticles(page: number = 0, size: number = 10): Observable<Page<Article>> {
     const params = new HttpParams()
       .set('page', page.toString())
-      .set('size', size.toString());
+      .set('size', size.toString())
+      .set('sort', 'createdAt,DESC');
 
     return this.http.get<Page<Article>>(this.apiUrl + '/articles', { 
         params, 
@@ -66,6 +66,15 @@ export class ArticleService {
       catchError(err => {
         console.error('Failed to post article', err);
         return throwError(() => new Error('Could not fetch article'));
+      })
+    );
+  }
+
+  deleteArticle(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/articles/${id}`, { withCredentials: true }).pipe(
+      catchError(err => {
+        console.error('Failed to delete article', err);
+        return throwError(() => new Error('Could not delete article'));
       })
     );
   }

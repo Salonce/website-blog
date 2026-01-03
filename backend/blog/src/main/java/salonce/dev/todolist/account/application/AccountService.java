@@ -21,7 +21,12 @@ public class AccountService {
 
     public Account loadOrCreateAccount(AccountDto accountDto){
         return accountRepository.findByIdentity(accountDto.subject(), accountDto.provider())
-                .orElseGet(() -> accountRepository.save(new Account(accountDto.email(), accountDto.name(), accountDto.subject(), accountDto.provider())));
+                .orElseGet(() ->
+                {
+                    Account newAccount = new Account(accountDto.email(), accountDto.name(), accountDto.subject(), accountDto.provider());
+                    if (accountRepository.count() == 0) newAccount.addAdminRole();
+                    return accountRepository.save(newAccount);
+                });
     }
 
     public Account findAccount(Long id){

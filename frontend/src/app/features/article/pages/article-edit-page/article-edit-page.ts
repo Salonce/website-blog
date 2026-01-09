@@ -3,7 +3,7 @@ import { ArticleService } from '../../services/article-service';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NewArticle } from '../../models/new-article';
-import { QuillEditor } from '../../components/quill-editor/quill-editor';
+import { QuillEditor } from '../../../../shared/components/quill-editor/quill-editor';
 import { CommonModule } from '@angular/common';
 
 @Component({

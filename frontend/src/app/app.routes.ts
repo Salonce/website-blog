@@ -20,7 +20,8 @@ export const routes: Routes = [
             { path: '', component: HomePage },
             { path: 'home', component: HomePage },
             { path: 'settings', component: AccountDetailsPage },
-            { path: 'account-edit', component: AccountEditPage }
+            { path: 'account-edit', component: AccountEditPage },
+            { path: 'articles/:slug', component: ArticlePage }
         ]
     },
         {
@@ -40,13 +41,6 @@ export const routes: Routes = [
             { path: 'dashboard/article-management', component: ArticleAdminListPage },
             { path: 'dashboard/articles/:id/edit', component: ArticleEditPage },
             { path: 'dashboard/courses-management', component: AdminCourse }
-        ]
-    },
-    {
-        path: '', 
-        component: MainLayout,
-        children: [
-        { path: 'articles/:slug', component: ArticlePage }
         ]
     }
 ];

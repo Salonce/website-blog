@@ -2,42 +2,13 @@
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex justify-center overflow-x-auto space-x-4 py-4 scrollbar-hide">
 
-      <!-- Course link example -->
-      <a [routerLink]="['/courses/brain']"
-         routerLinkActive="bg-amber-600 text-white"
-         class="px-4 py-2 rounded-full text-base sm:text-lg font-semibold text-gray-800 hover:bg-amber-100 hover:text-amber-600 transition-colors whitespace-nowrap cursor-pointer">
-        Brain
-      </a>
-
-      <a [routerLink]="['/courses/behavioral-genetics']"
-         routerLinkActive="bg-amber-600 text-white"
-         class="px-4 py-2 rounded-full text-base sm:text-lg font-semibold text-gray-800 hover:bg-amber-100 hover:text-amber-600 transition-colors whitespace-nowrap cursor-pointer">
-        Behavioral Genetics
-      </a>
-
-      <a [routerLink]="['/courses/disorders']"
-         routerLinkActive="bg-amber-600 text-white"
-         class="px-4 py-2 rounded-full text-base sm:text-lg font-semibold text-gray-800 hover:bg-amber-100 hover:text-amber-600 transition-colors whitespace-nowrap cursor-pointer">
-        Disorders
-      </a>
-
-      <a [routerLink]="['/courses/personality-genetics']"
-         routerLinkActive="bg-amber-600 text-white"
-         class="px-4 py-2 rounded-full text-base sm:text-lg font-semibold text-gray-800 hover:bg-amber-100 hover:text-amber-600 transition-colors whitespace-nowrap cursor-pointer">
-        Personality
-      </a>
-
-      <a [routerLink]="['/courses/cognition']"
-         routerLinkActive="bg-amber-600 text-white"
-         class="px-4 py-2 rounded-full text-base sm:text-lg font-semibold text-gray-800 hover:bg-amber-100 hover:text-amber-600 transition-colors whitespace-nowrap cursor-pointer">
-        Intelligence
-      </a>
-
-      <a [routerLink]="['/courses/memory']"
-         routerLinkActive="bg-amber-600 text-white"
-         class="px-4 py-2 rounded-full text-base sm:text-lg font-semibold text-gray-800 hover:bg-amber-100 hover:text-amber-600 transition-colors whitespace-nowrap cursor-pointer">
-        Memory
-      </a>
+      @for (course of coursesMetadata$ | async; track course.id) {
+        <a [routerLink]="['/courses', course.slug]"
+           routerLinkActive="bg-amber-600 text-white"
+           class="px-4 py-2 rounded-full text-base sm:text-lg font-semibold text-gray-800 hover:bg-amber-100 hover:text-amber-600 transition-colors whitespace-nowrap cursor-pointer">
+          {{ course.name }}
+        </a>
+      }
 
     </div>
   </div>

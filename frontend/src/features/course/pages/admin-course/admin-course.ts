@@ -4,10 +4,11 @@ import { FormGroup, FormsModule } from '@angular/forms';
 import { CourseMetadata } from '../../models/course-metadata';
 import { CourseService } from '../../services/course-service/course-service';
 import { NewCourse } from '../../models/new-course';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-admin-course',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './admin-course.html',
   styleUrl: './admin-course.css'
 })
@@ -22,7 +23,10 @@ export class AdminCourse implements OnInit{
   newCourseName = signal('');
   isSubmitting = signal(false);
 
-  constructor(private courseService: CourseService) {}
+  constructor(
+    private courseService: CourseService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.loadCourses();
@@ -91,6 +95,10 @@ export class AdminCourse implements OnInit{
         console.error(err);
       }
     });
+  }
+
+  manageLessons(courseId: number) {
+    this.router.navigate(['/dashboard/courses', courseId, 'lessons']);
   }
 
   clearError() {

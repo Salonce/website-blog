@@ -11,6 +11,7 @@ import { DashboardOverview } from '../features/statistics/pages/dashboard-overvi
 import { ArticleEditPage } from '../features/article/pages/article-edit-page/article-edit-page';
 import { ArticleAdminListPage } from '../features/article/pages/article-admin-list-page/article-admin-list-page';
 import { AdminCourse } from '../features/course/pages/admin-course/admin-course';
+import { CourseLessons } from './course-lessons/course-lessons';
 
 export const routes: Routes = [
     {
@@ -41,7 +42,7 @@ export const routes: Routes = [
             { path: 'dashboard/article-management', component: ArticleAdminListPage },
             { path: 'dashboard/articles/:id/edit', component: ArticleEditPage },
             { path: 'dashboard/courses-management', component: AdminCourse },
-            { path: 'courses/:id/lessons', component: AdminCourse } 
+            { path: 'dashboard/courses/:id/lessons', component: CourseLessons } 
         ]
     }
 ];

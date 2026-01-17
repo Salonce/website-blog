@@ -2,25 +2,18 @@ package salonce.dev.todolist.course.application;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import salonce.dev.todolist.account.application.AccountService;
 import salonce.dev.todolist.account.domain.Account;
-import salonce.dev.todolist.account.infrastructure.AccountRepository;
 import salonce.dev.todolist.account.infrastructure.security.AccountPrincipal;
 import salonce.dev.todolist.article.application.exceptions.ArticleNotFound;
-import salonce.dev.todolist.article.domain.Article;
 import salonce.dev.todolist.course.application.exceptions.CourseNotFound;
 import salonce.dev.todolist.course.domain.Course;
 import salonce.dev.todolist.course.infrastructure.CourseRepository;
 import salonce.dev.todolist.course.presentation.CourseMapper;
 import salonce.dev.todolist.course.presentation.dtos.CourseCreateRequest;
 import salonce.dev.todolist.course.presentation.dtos.CourseViewResponse;
-import salonce.dev.todolist.task.application.exceptions.AccountNotFound;
 
 import java.util.List;
 
@@ -37,13 +30,13 @@ public class CourseService {
     }
 
     @Transactional
-    public CourseViewResponse getCourse(Long id){
+    public CourseViewResponse getCourseById(Long id){
         Course course = courseRepository.findById(id).orElseThrow(CourseNotFound::new);
         return CourseMapper.toCourseViewResponse(course);
     }
 
     @Transactional
-    public CourseViewResponse getCourse(String slug){
+    public CourseViewResponse getCourseBySlug(String slug){
         Course course = courseRepository.findBySlug(slug).orElseThrow(CourseNotFound::new);
         return CourseMapper.toCourseViewResponse(course);
     }

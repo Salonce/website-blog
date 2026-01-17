@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CourseService } from '../../features/course/services/course-service/course-service';
 import { LessonService } from '../../features/lesson/services/lesson-service';
+import { NewLesson } from '../../features/course/models/new-lesson';
 
 @Component({
   selector: 'app-course-lessons',
@@ -36,29 +37,13 @@ export class CourseLessons {
   ngOnInit() {
     this.courseId = +this.route.snapshot.paramMap.get('id')!;
     this.loadCourse();
-    this.loadLessons();
   }
 
   loadCourse() {
-    this.courseService.getCourse(this.courseId).subscribe({
+    this.courseService.getCourseById(this.courseId).subscribe({
       next: (course) => this.course.set(course),
       error: (err) => {
         this.error.set('Failed to load course');
-        console.error(err);
-      }
-    });
-  }
-
-  loadLessons() {
-    this.isLoading.set(true);
-    this.lessonService.getLessonsByCourse(this.courseId).subscribe({
-      next: (lessons) => {
-        this.lessons.set(lessons);
-        this.isLoading.set(false);
-      },
-      error: (err) => {
-        this.error.set('Failed to load lessons');
-        this.isLoading.set(false);
         console.error(err);
       }
     });
@@ -81,8 +66,7 @@ export class CourseLessons {
     this.isSubmitting.set(true);
     const newLesson: NewLesson = { 
       courseId: this.courseId,
-      title,
-      content 
+      name: string
     };
 
     this.lessonService.createLesson(newLesson).subscribe({

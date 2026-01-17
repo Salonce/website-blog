@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CourseMetadata } from '../../features/course/models/course-metadata';
+import { CourseMetadata } from '../../models/course-metadata';
 
 @Component({
   selector: 'app-course-list',

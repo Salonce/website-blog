@@ -22,9 +22,14 @@ public class CourseController {
         return ResponseEntity.ok(courseService.getAllCourses());
     }
 
+    @GetMapping("/api/courses/{id}")
+    public ResponseEntity<CourseViewResponse> getCourseById(@PathVariable Long id){
+        return ResponseEntity.ok(courseService.getCourseById(id));
+    }
+
     @GetMapping("/api/courses/{slug}")
     public ResponseEntity<CourseViewResponse> getCourseViewResponse(@PathVariable String slug){
-        return ResponseEntity.ok(courseService.getCourse(slug));
+        return ResponseEntity.ok(courseService.getCourseBySlug(slug));
     }
 
 //    @PatchMapping("/api/articles/{id}")

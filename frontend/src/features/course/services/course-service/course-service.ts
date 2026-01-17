@@ -14,6 +14,16 @@ export class CourseService {
   private readonly apiUrl = environment.apiUrl;
 
 
+  getCourseById(id: number): Observable<CourseMetadata>{
+    return this.http.get<CourseMetadata>(this.apiUrl + '/courses/${id}', {
+      withCredentials: true
+    }).pipe(
+      catchError(err => {
+        console.error('Failed to fetch courses', err);
+        return throwError(() => new Error('Could not fetch courses'));
+      })
+    );
+  }
 
   getCourses(): Observable<CourseMetadata[]>{
     return this.http.get<CourseMetadata[]>(this.apiUrl + '/courses', {

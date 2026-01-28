@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
-import { AuthService } from '../../../core/auth-service/auth-service';
+import { Component, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { Principal } from '../../../core/models/principal';
+import { LessonMetadata } from '../../../features/course/models/lesson-metadata';
+import { of } from 'rxjs/internal/observable/of';
+import { LessonService } from '../../../features/lesson/services/lesson-service';
 
 @Component({
   selector: 'app-navbar-lessons',
@@ -11,16 +12,16 @@ import { Principal } from '../../../core/models/principal';
   templateUrl: './navbar-lessons.html',
   styleUrl: './navbar-lessons.css'
 })
-export class NavbarLessons {
-  isOpen = false;
-  
-  principal$: Observable<Principal | null>;
+export class NavbarLessons implements OnInit {
+  @Input() courseSlug!: string; // Receive the selected course slug
 
-  constructor(private authService: AuthService){
-    this.principal$ = this.authService.principal$;
-  }
+  lessons$: Observable<LessonMetadata[]> = of([]);
 
-  onLogout() : void {
-    this.authService.logout();
+  constructor(private lessonService: LessonService) {}
+
+  ngOnInit(): void {
+    if (this.courseSlug) {
+      this.lessons$ = this.lessonService.getLessonsMetadataForCourse(this.courseSlug);
+    }
   }
 }

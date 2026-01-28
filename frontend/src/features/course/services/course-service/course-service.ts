@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
 import { CourseMetadata } from '../../models/course-metadata';
 import { NewCourse } from '../../models/new-course';
+import { Course } from '../../models/course';
 
 @Injectable({
   providedIn: 'root'
@@ -24,8 +25,8 @@ export class CourseService {
     );
   }
 
-  getCourseById(id: number): Observable<CourseMetadata>{
-    return this.http.get<CourseMetadata>(`${this.apiUrl}/courses/${id}`, {
+  getCourseById(id: number): Observable<Course>{
+    return this.http.get<Course>(`${this.apiUrl}/courses/${id}`, {
       withCredentials: true
     }).pipe(
       catchError(err => {

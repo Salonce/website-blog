@@ -14,7 +14,7 @@ public class Lessons {
 
     @Getter
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
-    @OrderBy("orderIndex ASC")
+    @OrderBy("orderId ASC")
     private List<Lesson> lessons = new ArrayList<>();
 
     public void addLesson(Lesson lesson, Course course) {

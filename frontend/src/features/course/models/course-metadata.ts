@@ -1,5 +1,3 @@
-import { LessonMetadata } from "./lesson-metadata";
-
 export interface CourseMetadata{
   id : number;
   name : string;

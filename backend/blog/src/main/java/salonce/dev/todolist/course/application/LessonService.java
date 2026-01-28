@@ -12,7 +12,9 @@ import salonce.dev.todolist.course.domain.Lesson;
 import salonce.dev.todolist.course.infrastructure.LessonRepository;
 import salonce.dev.todolist.course.presentation.LessonMapper;
 import salonce.dev.todolist.course.presentation.dtos.LessonCreateRequest;
-import salonce.dev.todolist.course.presentation.dtos.LessonViewResponse;
+import salonce.dev.todolist.course.presentation.dtos.LessonMetadataViewResponse;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -23,13 +25,24 @@ public class LessonService {
     private final LessonRepository lessonRepository;
 
     @Transactional
-    public LessonViewResponse saveLesson(AccountPrincipal principal, Long courseId, LessonCreateRequest lessonCreateRequest){
+    public LessonMetadataViewResponse saveLesson(AccountPrincipal principal, Long courseId, LessonCreateRequest lessonCreateRequest){
         Account account = accountService.findAccount(principal.id());
         if (!account.isAdmin()) throw new AccessDeniedException("Access forbidden.");
         int nextOrderIndex = lessonRepository.findMaxOrderIndex(courseId) + 1;
         Course course = courseService.getCourseById(courseId);
-        Lesson lesson = new Lesson(lessonCreateRequest.title(), nextOrderIndex);
+        Lesson lesson = new Lesson(lessonCreateRequest.title(), generateSlug(lessonCreateRequest.title()), nextOrderIndex);
         course.addLesson(lesson);
         return LessonMapper.toLessonViewResponse(lessonRepository.save(lesson));
+    }
+
+    public List<LessonMetadataViewResponse> getLessonsMetadataByCourseSlug(String courseSlug){
+         return lessonRepository.findAllMetadataByCourseSlug(courseSlug);
+    }
+
+    private String generateSlug(String name) {
+        return name.toLowerCase()
+                .trim()
+                .replaceAll("[^a-z0-9\\s-]", "")
+                .replaceAll("\\s+", "-");
     }
 }

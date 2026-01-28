@@ -1,12 +1,12 @@
 import { Component, signal } from '@angular/core';
-import { CourseMetadata } from '../../features/course/models/course-metadata';
-import { LessonMetadata } from '../../features/course/models/lesson-metadata';
+import { LessonMetadata } from '../../models/lesson-metadata';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { CourseService } from '../../features/course/services/course-service/course-service';
-import { LessonService } from '../../features/lesson/services/lesson-service';
-import { NewLesson } from '../../features/course/models/new-lesson';
+import { CourseService } from '../../services/course-service/course-service';
+import { LessonService } from '../../../lesson/services/lesson-service';
+import { NewLesson } from '../../models/new-lesson';
+import { Course } from '../../models/course';
 
 @Component({
   selector: 'app-course-lessons',
@@ -16,7 +16,7 @@ import { NewLesson } from '../../features/course/models/new-lesson';
 })
 export class CourseLessons {
   courseId!: number;
-  course = signal<CourseMetadata | null>(null);
+  course = signal<Course | null>(null);
   lessons = signal<LessonMetadata[]>([]);
   isLoading = signal(false);
   error = signal<string | null>(null);

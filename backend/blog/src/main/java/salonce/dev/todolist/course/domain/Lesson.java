@@ -15,7 +15,7 @@ public class Lesson {
 
     private String slug;
 
-    private int orderIndex;
+    private int orderId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
@@ -28,8 +28,9 @@ public class Lesson {
 
     protected Lesson() {} // JPA
 
-    public Lesson(String title, int orderIndex) {
+    public Lesson(String title, String slug, int orderId) {
         this.title = title;
-        this.orderIndex = orderIndex;
+        this.slug = slug;
+        this.orderId = orderId;
     }
 }

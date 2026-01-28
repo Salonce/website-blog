@@ -5,6 +5,7 @@ import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { catchError } from 'rxjs/internal/operators/catchError';
 import { throwError } from 'rxjs/internal/observable/throwError';
+import { LessonMetadata } from '../../course/models/lesson-metadata';
 
 @Injectable({
   providedIn: 'root'
@@ -24,12 +25,21 @@ export class LessonService {
       })
     );
   }
-  
+
   removeLesson(courseId: number, lessonId: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/courses/${courseId}/lessons/${lessonId}`, { withCredentials: true }).pipe(
       catchError(err => {
         console.error('Failed to delete lesson', err);
         return throwError(() => new Error('Could not delete lesson'));
+      })
+    );
+  }
+
+  getLessonsMetadataForCourse(courseSlug: string): Observable<LessonMetadata[]>{
+    return this.http.get<LessonMetadata[]>(`${this.apiUrl}/courses/${courseSlug}/lessons`, {withCredentials : true}).pipe(
+      catchError(err => {
+        console.error('Failed to post lesson', err);
+        return throwError(() => new Error('Could not fetch lesson'));
       })
     );
   }

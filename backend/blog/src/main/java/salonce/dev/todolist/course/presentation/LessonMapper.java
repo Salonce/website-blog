@@ -1,10 +1,10 @@
 package salonce.dev.todolist.course.presentation;
 
 import salonce.dev.todolist.course.domain.Lesson;
-import salonce.dev.todolist.course.presentation.dtos.LessonViewResponse;
+import salonce.dev.todolist.course.presentation.dtos.LessonMetadataViewResponse;
 
 public class LessonMapper {
-    public static LessonViewResponse toLessonViewResponse(Lesson lesson){
-        return new LessonViewResponse(lesson.getId(), lesson.getTitle(), lesson.getSlug(), lesson.getOrderIndex());
+    public static LessonMetadataViewResponse toLessonViewResponse(Lesson lesson){
+        return new LessonMetadataViewResponse(lesson.getId(), lesson.getTitle(), lesson.getSlug(), lesson.getOrderId());
     }
 }

@@ -50,7 +50,13 @@ public class CourseController {
     }
 
     @PostMapping("/api/courses/{courseId}/lessons")
-    public ResponseEntity<LessonViewResponse> saveLesson(@AuthenticationPrincipal AccountPrincipal principal, @PathVariable Long courseId, @RequestBody LessonCreateRequest lessonCreateRequest){
+    public ResponseEntity<LessonMetadataViewResponse> saveLesson(@AuthenticationPrincipal AccountPrincipal principal, @PathVariable Long courseId, @RequestBody LessonCreateRequest lessonCreateRequest){
         return ResponseEntity.ok(lessonService.saveLesson(principal, courseId, lessonCreateRequest));
+    }
+
+    @GetMapping("/api/courses/slug/{courseSlug}/lessons")
+    public ResponseEntity<List<LessonMetadataViewResponse>> getLessonsByCourseSlug(@PathVariable String courseSlug){
+        List<LessonMetadataViewResponse> lessons = lessonService.getLessonsMetadataByCourseSlug(courseSlug);
+        return ResponseEntity.ok(lessons);
     }
 }

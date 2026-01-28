@@ -36,7 +36,7 @@ export class LessonService {
   }
 
   getLessonsMetadataForCourse(courseSlug: string): Observable<LessonMetadata[]>{
-    return this.http.get<LessonMetadata[]>(`${this.apiUrl}/courses/${courseSlug}/lessons`, {withCredentials : true}).pipe(
+    return this.http.get<LessonMetadata[]>(`${this.apiUrl}/courses/slug/${courseSlug}/lessons`, {withCredentials : true}).pipe(
       catchError(err => {
         console.error('Failed to post lesson', err);
         return throwError(() => new Error('Could not fetch lesson'));

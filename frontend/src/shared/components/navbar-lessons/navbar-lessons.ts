@@ -1,10 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/internal/Observable';
-import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { LessonMetadata } from '../../../features/course/models/lesson-metadata';
-import { of } from 'rxjs/internal/observable/of';
+import { Component, OnInit, signal } from '@angular/core';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { LessonService } from '../../../features/lesson/services/lesson-service';
+import { LessonMetadata } from '../../../features/course/models/lesson-metadata';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-navbar-lessons',
@@ -13,15 +11,35 @@ import { LessonService } from '../../../features/lesson/services/lesson-service'
   styleUrl: './navbar-lessons.css'
 })
 export class NavbarLessons implements OnInit {
-  @Input() courseSlug!: string; // Receive the selected course slug
+  // Reactive state
+  courseSlug = signal<string | null>(null);
+  lessons = signal<LessonMetadata[]>([]);
 
-  lessons$: Observable<LessonMetadata[]> = of([]);
+  constructor(
+    private route: ActivatedRoute,
+    private lessonService: LessonService
+  ) {}
 
-  constructor(private lessonService: LessonService) {}
+  ngOnInit() {
+  console.log('NavbarLessons initialized');
+  
+  this.route.paramMap.subscribe(params => {
+    console.log('All route params:', params);
+    console.log('Keys:', params.keys);
+    
+    const slug = params.get('courseSlug'); // Try 'courseSlug' (camelCase)
+    console.log('Course slug:', slug);
+    
+    if (slug) {
+      this.courseSlug.set(slug);
 
-  ngOnInit(): void {
-    if (this.courseSlug) {
-      this.lessons$ = this.lessonService.getLessonsMetadataForCourse(this.courseSlug);
+      this.lessonService.getLessonsMetadataForCourse(slug).subscribe(lessons => {
+        console.log('Lessons received:', lessons);
+        this.lessons.set(lessons);
+      });
+    } else {
+      console.warn('No course slug found in route params');
     }
-  }
+  });
+}
 }

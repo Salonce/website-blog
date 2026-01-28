@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ErrorAlert } from './error-alert';
+import { CourseLayout } from './course-layout';
 
-describe('ErrorAlert', () => {
-  let component: ErrorAlert;
-  let fixture: ComponentFixture<ErrorAlert>;
+describe('CourseLayout', () => {
+  let component: CourseLayout;
+  let fixture: ComponentFixture<CourseLayout>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ErrorAlert]
+      imports: [CourseLayout]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ErrorAlert);
+    fixture = TestBed.createComponent(CourseLayout);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -12,6 +12,7 @@ import { ArticleEditPage } from '../features/article/pages/article-edit-page/art
 import { ArticleAdminListPage } from '../features/article/pages/article-admin-list-page/article-admin-list-page';
 import { AdminCourse } from '../features/course/pages/admin-course/admin-course';
 import { CourseLessons } from '../features/course/pages/course-lessons/course-lessons';
+import { CourseLayout } from '../shared/layouts/course-layout/course-layout';
 
 export const routes: Routes = [
     {
@@ -25,14 +26,21 @@ export const routes: Routes = [
             { path: 'articles/:slug', component: ArticlePage }
         ]
     },
-        {
+    {
+        path: 'courses/:courseSlug', 
+        component: CourseLayout,
+        children: [
+            { path: '', component: HomePage },
+        ]
+    },
+    {
         path: '', 
         component: AuthLayout,
         children: [
             { path: 'auth', component: AccountDetailsPage }
         ]
     },
-        {
+    {
         path: '', 
         component: DashboardLayout,
         children: [

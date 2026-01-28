@@ -12,7 +12,7 @@ import salonce.dev.todolist.course.domain.Lesson;
 import salonce.dev.todolist.course.infrastructure.LessonRepository;
 import salonce.dev.todolist.course.presentation.LessonMapper;
 import salonce.dev.todolist.course.presentation.dtos.LessonCreateRequest;
-import salonce.dev.todolist.course.presentation.dtos.LessonMetadataViewResponse;
+import salonce.dev.todolist.course.presentation.dtos.LessonMetadataResponse;
 
 import java.util.List;
 
@@ -25,7 +25,7 @@ public class LessonService {
     private final LessonRepository lessonRepository;
 
     @Transactional
-    public LessonMetadataViewResponse saveLesson(AccountPrincipal principal, Long courseId, LessonCreateRequest lessonCreateRequest){
+    public LessonMetadataResponse saveLesson(AccountPrincipal principal, Long courseId, LessonCreateRequest lessonCreateRequest){
         Account account = accountService.findAccount(principal.id());
         if (!account.isAdmin()) throw new AccessDeniedException("Access forbidden.");
         int nextOrderIndex = lessonRepository.findMaxOrderIndex(courseId) + 1;
@@ -35,7 +35,7 @@ public class LessonService {
         return LessonMapper.toLessonViewResponse(lessonRepository.save(lesson));
     }
 
-    public List<LessonMetadataViewResponse> getLessonsMetadataByCourseSlug(String courseSlug){
+    public List<LessonMetadataResponse> getLessonsMetadataByCourseSlug(String courseSlug){
          return lessonRepository.findAllMetadataByCourseSlug(courseSlug);
     }
 

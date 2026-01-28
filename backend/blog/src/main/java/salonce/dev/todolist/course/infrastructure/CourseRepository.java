@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import salonce.dev.todolist.course.domain.Course;
-import salonce.dev.todolist.course.presentation.dtos.CourseMetadataViewResponse;
+import salonce.dev.todolist.course.presentation.dtos.CourseMetadataResponse;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +20,7 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
     List<Course> findAllWithLessons();
 
     @Query("""
-    select new salonce.dev.todolist.course.presentation.dtos.CourseMetadataViewResponse(
+    select new salonce.dev.todolist.course.presentation.dtos.CourseMetadataResponse(
         c.id,
         c.name,
         c.slug,
@@ -31,5 +31,5 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
     left join c.lessons.lessons l
     group by c.id, c.name, c.slug, c.orderId
     """)
-    List<CourseMetadataViewResponse> findAllCourseViews();
+    List<CourseMetadataResponse> findAllCourseViews();
 }

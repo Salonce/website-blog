@@ -13,8 +13,8 @@ import salonce.dev.todolist.course.domain.Course;
 import salonce.dev.todolist.course.infrastructure.CourseRepository;
 import salonce.dev.todolist.course.presentation.CourseMapper;
 import salonce.dev.todolist.course.presentation.dtos.CourseCreateRequest;
-import salonce.dev.todolist.course.presentation.dtos.CourseMetadataViewResponse;
-import salonce.dev.todolist.course.presentation.dtos.CourseViewResponse;
+import salonce.dev.todolist.course.presentation.dtos.CourseMetadataResponse;
+import salonce.dev.todolist.course.presentation.dtos.CourseResponse;
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ public class CourseService {
     private final CourseRepository courseRepository;
 
     @Transactional
-    public List<CourseMetadataViewResponse> getAllCoursesMetadata(){
+    public List<CourseMetadataResponse> getAllCoursesMetadata(){
         return courseRepository.findAllCourseViews().stream().toList();
     }
 
@@ -36,19 +36,19 @@ public class CourseService {
     }
 
     @Transactional
-    public CourseViewResponse getCourseViewById(Long id){
+    public CourseResponse getCourseViewById(Long id){
         Course course = courseRepository.findById(id).orElseThrow(CourseNotFound::new);
         return CourseMapper.toCourseViewResponse(course);
     }
 
     @Transactional
-    public CourseViewResponse getCourseBySlug(String slug){
+    public CourseResponse getCourseBySlug(String slug){
         Course course = courseRepository.findBySlug(slug).orElseThrow(CourseNotFound::new);
         return CourseMapper.toCourseViewResponse(course);
     }
 
     @Transactional
-    public CourseViewResponse saveCourse(AccountPrincipal principal, CourseCreateRequest courseCreateRequest){
+    public CourseResponse saveCourse(AccountPrincipal principal, CourseCreateRequest courseCreateRequest){
         Account account = accountService.findAccount(principal.id());
         if (!account.isAdmin()) throw new AccessDeniedException("Access forbidden.");
         Course course = new Course(courseCreateRequest.name(), generateSlug(courseCreateRequest.name()), getNextOrderIndex());

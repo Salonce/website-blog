@@ -19,17 +19,17 @@ public class CourseController {
     private final LessonService lessonService;
 
     @GetMapping("/api/courses")
-    public ResponseEntity<List<CourseMetadataViewResponse>> getAllCourseViewResponses(){
+    public ResponseEntity<List<CourseMetadataResponse>> getAllCourseViewResponses(){
         return ResponseEntity.ok(courseService.getAllCoursesMetadata());
     }
 
     @GetMapping("/api/courses/{id}")
-    public ResponseEntity<CourseViewResponse> getCourseById(@PathVariable Long id){
+    public ResponseEntity<CourseResponse> getCourseById(@PathVariable Long id){
         return ResponseEntity.ok(courseService.getCourseViewById(id));
     }
 
     @GetMapping("/api/courses/slug/{slug}")
-    public ResponseEntity<CourseViewResponse> getCourseViewResponse(@PathVariable String slug){
+    public ResponseEntity<CourseResponse> getCourseViewResponse(@PathVariable String slug){
         return ResponseEntity.ok(courseService.getCourseBySlug(slug));
     }
 
@@ -45,18 +45,18 @@ public class CourseController {
     }
 
     @PostMapping("/api/courses")
-    public ResponseEntity<CourseViewResponse> saveCourse(@AuthenticationPrincipal AccountPrincipal principal, @RequestBody CourseCreateRequest courseCreateRequest){
+    public ResponseEntity<CourseResponse> saveCourse(@AuthenticationPrincipal AccountPrincipal principal, @RequestBody CourseCreateRequest courseCreateRequest){
         return ResponseEntity.ok(courseService.saveCourse(principal, courseCreateRequest));
     }
 
     @PostMapping("/api/courses/{courseId}/lessons")
-    public ResponseEntity<LessonMetadataViewResponse> saveLesson(@AuthenticationPrincipal AccountPrincipal principal, @PathVariable Long courseId, @RequestBody LessonCreateRequest lessonCreateRequest){
+    public ResponseEntity<LessonMetadataResponse> saveLesson(@AuthenticationPrincipal AccountPrincipal principal, @PathVariable Long courseId, @RequestBody LessonCreateRequest lessonCreateRequest){
         return ResponseEntity.ok(lessonService.saveLesson(principal, courseId, lessonCreateRequest));
     }
 
     @GetMapping("/api/courses/slug/{courseSlug}/lessons")
-    public ResponseEntity<List<LessonMetadataViewResponse>> getLessonsByCourseSlug(@PathVariable String courseSlug){
-        List<LessonMetadataViewResponse> lessons = lessonService.getLessonsMetadataByCourseSlug(courseSlug);
+    public ResponseEntity<List<LessonMetadataResponse>> getLessonsByCourseSlug(@PathVariable String courseSlug){
+        List<LessonMetadataResponse> lessons = lessonService.getLessonsMetadataByCourseSlug(courseSlug);
         return ResponseEntity.ok(lessons);
     }
 }

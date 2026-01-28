@@ -39,15 +39,23 @@ export class CourseLessons {
     this.loadCourse();
   }
 
-  loadCourse() {
-    this.courseService.getCourseById(this.courseId).subscribe({
-      next: (course) => this.course.set(course),
-      error: (err) => {
-        this.error.set('Failed to load course');
-        console.error(err);
-      }
-    });
-  }
+loadCourse() {
+this.isLoading.set(true);
+
+
+this.courseService.getCourseById(this.courseId).subscribe({
+next: (course) => {
+this.course.set(course);
+this.lessons.set(course.lessons ?? []);
+this.isLoading.set(false);
+},
+error: (err) => {
+this.error.set('Failed to load course');
+this.isLoading.set(false);
+console.error(err);
+}
+});
+}
 
   toggleAddForm() {
     this.showAddForm.update(v => !v);

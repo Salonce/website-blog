@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import salonce.dev.todolist.course.domain.Lesson;
-import salonce.dev.todolist.course.presentation.dtos.LessonMetadataViewResponse;
+import salonce.dev.todolist.course.presentation.dtos.LessonMetadataResponse;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
     int findMaxOrderIndex(@Param("courseId") Long courseId);
 
     @Query("""
-        SELECT new salonce.dev.todolist.course.presentation.dtos.LessonMetadataViewResponse(
+        SELECT new salonce.dev.todolist.course.presentation.dtos.LessonMetadataResponse(
                 l.id,
                 l.title,
                 l.slug,
@@ -26,5 +26,5 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
             WHERE l.course.slug = :courseSlug
             ORDER BY l.orderId ASC
         """)
-    List<LessonMetadataViewResponse> findAllMetadataByCourseSlug(@Param("courseSlug") String courseSlug);
+    List<LessonMetadataResponse> findAllMetadataByCourseSlug(@Param("courseSlug") String courseSlug);
 }

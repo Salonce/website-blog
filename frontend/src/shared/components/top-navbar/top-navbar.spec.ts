@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AuthLayout } from './auth-layout';
+import { TopNavbar } from './top-navbar';
 
-describe('AuthLayout', () => {
-  let component: AuthLayout;
-  let fixture: ComponentFixture<AuthLayout>;
+describe('TopNavbar', () => {
+  let component: TopNavbar;
+  let fixture: ComponentFixture<TopNavbar>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AuthLayout]
+      imports: [TopNavbar]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(AuthLayout);
+    fixture = TestBed.createComponent(TopNavbar);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

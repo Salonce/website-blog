@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { MainLayout } from '../shared/layouts/main-layout/main-layout';
 import { HomePage } from '../features/article/pages/home-page/home-page';
-import { AuthLayout } from '../shared/layouts/auth-layout/auth-layout';
 import { AccountDetailsPage } from '../features/account/pages/account-details-page/account-details-page';
 import { AccountEditPage } from '../features/account/pages/account-edit-page/account-edit-page';
 import { DashboardLayout } from '../shared/layouts/dashboard-layout/dashboard-layout';
@@ -28,29 +27,19 @@ export const routes: Routes = [
     },
     {
         path: 'courses/:courseSlug', 
-        component: CourseLayout,
-        children: [
-            { path: '', component: HomePage },
-        ]
+        component: CourseLayout
     },
     {
-        path: '', 
-        component: AuthLayout,
-        children: [
-            { path: 'auth', component: AccountDetailsPage }
-        ]
-    },
-    {
-        path: '', 
+        path: 'dashboard', 
         component: DashboardLayout,
         children: [
-            { path: 'dashboard', component: DashboardOverview },
-            { path: 'dashboard/overview', component: DashboardOverview },
-            { path: 'dashboard/create-article', component: ArticleNewPage },
-            { path: 'dashboard/article-management', component: ArticleAdminListPage },
-            { path: 'dashboard/articles/:id/edit', component: ArticleEditPage },
-            { path: 'dashboard/courses-management', component: AdminCourse },
-            { path: 'dashboard/courses/:id/lessons', component: CourseLessons } 
+            { path: '', component: DashboardOverview },
+            { path: 'overview', component: DashboardOverview },
+            { path: 'create-article', component: ArticleNewPage },
+            { path: 'article-management', component: ArticleAdminListPage },
+            { path: 'articles/:id/edit', component: ArticleEditPage },
+            { path: 'courses-management', component: AdminCourse },
+            { path: 'courses/:id/lessons', component: CourseLessons } 
         ]
     }
 ];

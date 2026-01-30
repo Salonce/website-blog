@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Navbar } from '../../components/navbar/navbar';
 import { NavbarCourses } from "../../../features/course/components/navbar-courses/navbar-courses";
-import { NavbarLessons } from "../../components/navbar-lessons/navbar-lessons";
+import { TopNavbar } from '../../components/top-navbar/top-navbar';
 
 @Component({
   selector: 'app-main-layout',
-  imports: [RouterOutlet, Navbar, NavbarCourses, NavbarLessons],
+  imports: [RouterOutlet, TopNavbar, NavbarCourses],
   templateUrl: './main-layout.html',
   styleUrl: './main-layout.css'
 })

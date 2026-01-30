@@ -5,7 +5,7 @@ import { Article } from '../../models/article';
 import { Page } from '../../../../shared/ui/pagination/models/page';
 import { AsyncPipe } from '@angular/common';
 import { Pagination } from '../../../../shared/ui/pagination/pagination';
-import { ArticleAdminList } from '../../components/article-admin-list/article-admin-list';
+import { ArticleAdminList } from '../article-admin-list/article-admin-list';
 @Component({
   selector: 'app-article-admin-list-page',
   imports: [AsyncPipe, Pagination, ArticleAdminList],

@@ -1,19 +1,19 @@
 import { Component } from '@angular/core';
-import { ArticleService } from '../../services/article-service';
 import { Observable } from 'rxjs/internal/Observable';
-import { Page } from '../../../../shared/ui/pagination/models/page';
+import { ArticleService } from '../../services/article-service';
 import { Article } from '../../models/article';
+import { Page } from '../../../../shared/ui/pagination/models/page';
 import { AsyncPipe } from '@angular/common';
-import { ArticleList } from '../../components/article-list/article-list';
+import { ArticleList } from './article-list/article-list';
 import { Pagination } from '../../../../shared/ui/pagination/pagination';
+
 @Component({
-  selector: 'app-home-page',
+  selector: 'app-articles-page',
   imports: [AsyncPipe, ArticleList, Pagination],
-  templateUrl: './home-page.html',
-  styleUrl: './home-page.css'
+  templateUrl: './articles-page.html',
+  styleUrl: './articles-page.css'
 })
-export class HomePage {
-  
+export class ArticlesPage {
   $articlesPage: Observable<Page<Article>>;
 
   constructor(private articleService : ArticleService){

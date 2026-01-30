@@ -1,11 +1,9 @@
 import { Component } from '@angular/core';
-import { AuthService } from '../../../../core/auth-service/auth-service';
 import { Observable } from 'rxjs/internal/Observable';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { Principal } from '../../../../core/models/principal';
-import { CourseService } from '../../services/course-service/course-service';
-import { CourseMetadata } from '../../models/course-metadata';
+import { CourseService } from '../../../services/course-service/course-service';
+import { CourseMetadata } from '../../../models/course-metadata';
 
 @Component({
   selector: 'app-navbar-courses',
@@ -16,15 +14,9 @@ import { CourseMetadata } from '../../models/course-metadata';
 export class NavbarCourses {
   isOpen = false;
   
-  principal$: Observable<Principal | null>;
   coursesMetadata$: Observable<CourseMetadata[]>;
 
-  constructor(private authService: AuthService, private courseService: CourseService){
-    this.principal$ = this.authService.principal$;
+  constructor(private courseService: CourseService){
     this.coursesMetadata$ = this.courseService.getCoursesMetadata();
-  }
-
-  onLogout() : void {
-    this.authService.logout();
   }
 }

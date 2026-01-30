@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ArticleService } from '../../services/article-service';
 import { Article } from '../../models/article';
-import { Page } from '../../../../shared/models/page';
+import { Page } from '../../../../shared/ui/pagination/models/page';
 import { AsyncPipe } from '@angular/common';
-import { Pagination } from '../../../../shared/pagination/pagination';
+import { Pagination } from '../../../../shared/ui/pagination/pagination';
 import { ArticleAdminList } from '../../components/article-admin-list/article-admin-list';
 @Component({
   selector: 'app-article-admin-list-page',

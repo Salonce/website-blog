@@ -1,18 +1,18 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, signal } from '@angular/core';
-import { FormGroup, FormsModule } from '@angular/forms';
-import { CourseMetadata } from '../../models/course-metadata';
-import { CourseService } from '../../services/course-service/course-service';
-import { NewCourse } from '../../models/new-course';
+import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { CourseService } from '../../services/course-service/course-service';
+import { CourseMetadata } from '../../models/course-metadata';
+import { NewCourse } from '../../models/new-course';
 
 @Component({
-  selector: 'app-admin-course',
+  selector: 'app-courses-management-page',
   imports: [CommonModule, FormsModule, RouterModule],
-  templateUrl: './admin-course.html',
-  styleUrl: './admin-course.css'
+  templateUrl: './courses-management-page.html',
+  styleUrl: './courses-management-page.css'
 })
-export class AdminCourse implements OnInit{
+export class CoursesManagementPage implements OnInit {
 
   courses = signal<CourseMetadata[]>([]);
   isLoading = signal(false);

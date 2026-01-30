@@ -1,21 +1,21 @@
 import { Component, signal } from '@angular/core';
 import { LessonMetadata } from '../../models/lesson-metadata';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { Course } from '../../models/course';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CourseService } from '../../services/course-service/course-service';
-import { LessonService } from '../../../lesson/services/lesson-service';
+import { LessonService } from '../../services/lesson-service/lesson-service';
 import { NewLesson } from '../../models/new-lesson';
-import { Course } from '../../models/course';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-course-lessons',
+  selector: 'app-course-lessons-management-page',
   imports: [CommonModule, FormsModule, RouterModule],
-  templateUrl: './course-lessons.html',
-  styleUrl: './course-lessons.css'
+  templateUrl: './course-lessons-management-page.html',
+  styleUrl: './course-lessons-management-page.css'
 })
-export class CourseLessons {
-  courseId!: number;
+export class CourseLessonsManagementPage {
+courseId!: number;
   course = signal<Course | null>(null);
   lessons = signal<LessonMetadata[]>([]);
   isLoading = signal(false);
@@ -39,23 +39,15 @@ export class CourseLessons {
     this.loadCourse();
   }
 
-loadCourse() {
-this.isLoading.set(true);
-
-
-this.courseService.getCourseById(this.courseId).subscribe({
-next: (course) => {
-this.course.set(course);
-this.lessons.set(course.lessons ?? []);
-this.isLoading.set(false);
-},
-error: (err) => {
-this.error.set('Failed to load course');
-this.isLoading.set(false);
-console.error(err);
-}
-});
-}
+  loadCourse() {
+    this.courseService.getCourseById(this.courseId).subscribe({
+      next: (course) => this.course.set(course),
+      error: (err) => {
+        this.error.set('Failed to load course');
+        console.error(err);
+      }
+    });
+  }
 
   toggleAddForm() {
     this.showAddForm.update(v => !v);

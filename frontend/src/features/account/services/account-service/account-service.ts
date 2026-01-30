@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 import { Account } from '../../models/account';
-import { environment } from '../../../../environments/environment';
+import { environment } from '../../../../app/environments/environment';
 
 
 @Injectable({

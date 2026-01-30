@@ -1,7 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { LessonService } from '../../services/lesson-service';
-import { LessonMetadata } from '../../../course/models/lesson-metadata';
+import { LessonService } from '../../../services/lesson-service/lesson-service';
+import { LessonMetadata } from '../../../models/lesson-metadata';
 import { CommonModule } from '@angular/common';
 
 @Component({

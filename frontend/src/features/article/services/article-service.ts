@@ -2,9 +2,9 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
 import { NewArticle } from '../models/new-article';
-import { Page } from '../../../shared/models/page';
+import { Page } from '../../../shared/ui/pagination/models/page';
 import { Article } from '../models/article';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../app/environments/environment';
 
 @Injectable({
   providedIn: 'root'

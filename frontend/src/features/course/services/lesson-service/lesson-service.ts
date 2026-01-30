@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { NewLesson } from '../../course/models/new-lesson';
+import { NewLesson } from '../../models/new-lesson';
 import { Observable } from 'rxjs/internal/Observable';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../../app/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { catchError } from 'rxjs/internal/operators/catchError';
 import { throwError } from 'rxjs/internal/observable/throwError';
-import { LessonMetadata } from '../../course/models/lesson-metadata';
+import { LessonMetadata } from '../../models/lesson-metadata';
 
 @Injectable({
   providedIn: 'root'

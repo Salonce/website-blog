@@ -63,6 +63,13 @@ public class CourseService {
         courseRepository.delete(course);
     }
 
+    @Transactional
+    public void deleteLesson(AccountPrincipal principal, Long lessonId){
+        requireAdmin(principal);
+        Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(ArticleNotFound::new);
+        lessonRepository.delete(lesson);
+    }
+
     private int getNextOrderIndex() {
         return courseRepository
                 .findTopByOrderByOrderIdDesc()
@@ -83,6 +90,10 @@ public class CourseService {
 
     public List<LessonMetadataResponse> getLessonsMetadataByCourseSlug(String courseSlug){
         return lessonRepository.findAllMetadataByCourseSlug(courseSlug);
+    }
+
+    public List<LessonMetadataResponse> getLessonsMetadataById(Long courseId){
+        return lessonRepository.findAllMetadataByCourseId(courseId);
     }
 
     private String generateSlug(String name) {

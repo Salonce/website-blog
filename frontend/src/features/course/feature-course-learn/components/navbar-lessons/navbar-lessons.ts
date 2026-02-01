@@ -33,7 +33,7 @@ export class NavbarLessons implements OnInit {
     if (slug) {
       this.courseSlug.set(slug);
 
-      this.lessonService.getLessonsMetadataForCourse(slug).subscribe(lessons => {
+      this.lessonService.getLessonsMetadataForCourseBySlug(slug).subscribe(lessons => {
         console.log('Lessons received:', lessons);
         this.lessons.set(lessons);
       });

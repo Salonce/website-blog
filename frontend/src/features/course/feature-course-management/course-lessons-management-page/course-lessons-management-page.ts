@@ -37,6 +37,7 @@ courseId!: number;
   ngOnInit() {
     this.courseId = +this.route.snapshot.paramMap.get('id')!;
     this.loadCourse();
+    this.loadLessons();
   }
 
   loadCourse() {
@@ -44,6 +45,22 @@ courseId!: number;
       next: (course) => this.course.set(course),
       error: (err) => {
         this.error.set('Failed to load course');
+        console.error(err);
+      }
+    });
+  }
+
+  loadLessons() {
+    this.isLoading.set(true);
+
+    this.lessonService.getLessonsMetadataForCourseById(this.courseId).subscribe({
+      next: (lessons: LessonMetadata[]) => {
+        this.lessons.set(lessons);
+        this.isLoading.set(false);
+      },
+      error: (err: unknown) => {
+        this.error.set('Failed to load lessons');
+        this.isLoading.set(false);
         console.error(err);
       }
     });
@@ -71,6 +88,7 @@ courseId!: number;
     this.lessonService.postLesson(this.courseId, newLesson).subscribe({
       next: () => {
         this.loadCourse();
+        this.loadLessons();
         this.newLessonTitle.set('');
         this.newLessonContent.set('');
         this.showAddForm.set(false);
@@ -94,7 +112,7 @@ courseId!: number;
       return;
     }
 
-    this.lessonService.removeLesson(this.courseId, lessonId).subscribe({
+    this.lessonService.removeLesson(lessonId).subscribe({
       next: () => {
         this.lessons.update(list => list.filter(l => l.id !== lessonId));
       },

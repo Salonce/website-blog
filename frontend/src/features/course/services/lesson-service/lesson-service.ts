@@ -26,8 +26,8 @@ export class LessonService {
     );
   }
 
-  removeLesson(courseId: number, lessonId: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/courses/${courseId}/lessons/${lessonId}`, { withCredentials: true }).pipe(
+  removeLesson(lessonId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/lessons/${lessonId}`, { withCredentials: true }).pipe(
       catchError(err => {
         console.error('Failed to delete lesson', err);
         return throwError(() => new Error('Could not delete lesson'));
@@ -35,7 +35,7 @@ export class LessonService {
     );
   }
 
-  getLessonsMetadataForCourse(courseSlug: string): Observable<LessonMetadata[]>{
+  getLessonsMetadataForCourseBySlug(courseSlug: string): Observable<LessonMetadata[]>{
     return this.http.get<LessonMetadata[]>(`${this.apiUrl}/courses/slug/${courseSlug}/lessons`, {withCredentials : true}).pipe(
       catchError(err => {
         console.error('Failed to post lesson', err);
@@ -43,4 +43,14 @@ export class LessonService {
       })
     );
   }
+
+    getLessonsMetadataForCourseById(courseId: number): Observable<LessonMetadata[]>{
+    return this.http.get<LessonMetadata[]>(`${this.apiUrl}/courses/${courseId}/lessons`, {withCredentials : true}).pipe(
+      catchError(err => {
+        console.error('Failed to post lesson', err);
+        return throwError(() => new Error('Could not fetch lesson'));
+      })
+    );
+  }
+  
 }

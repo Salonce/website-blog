@@ -27,4 +27,17 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
             ORDER BY l.orderId ASC
         """)
     List<LessonMetadataResponse> findAllMetadataByCourseSlug(@Param("courseSlug") String courseSlug);
+
+    @Query("""
+        SELECT new salonce.dev.todolist.course.presentation.dtos.LessonMetadataResponse(
+                l.id,
+                l.title,
+                l.slug,
+                l.orderId
+            )
+            FROM Lesson l
+            WHERE l.course.id = :id
+            ORDER BY l.orderId ASC
+        """)
+    List<LessonMetadataResponse> findAllMetadataByCourseId(@Param("id") Long id);
 }

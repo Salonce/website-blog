@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { NewLesson } from '../../models/new-lesson';
+import { LessonCreateRequest } from '../../models/lesson-create-request';
 import { Observable } from 'rxjs/internal/Observable';
 import { environment } from '../../../../app/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { catchError } from 'rxjs/internal/operators/catchError';
 import { throwError } from 'rxjs/internal/observable/throwError';
-import { LessonMetadata } from '../../models/lesson-metadata';
+import { LessonMetadataResponse } from '../../models/lesson-metadata-response';
 
 @Injectable({
   providedIn: 'root'
@@ -17,8 +17,8 @@ export class LessonService {
   private readonly apiUrl = environment.apiUrl;
 
 
-  postLesson(courseId: number, lesson: NewLesson) : Observable<NewLesson> {
-    return this.http.post<NewLesson>(`${this.apiUrl}/courses/${courseId}/lessons`, lesson, {withCredentials : true}).pipe(
+  postLesson(courseId: number, lesson: LessonCreateRequest) : Observable<LessonCreateRequest> {
+    return this.http.post<LessonCreateRequest>(`${this.apiUrl}/courses/${courseId}/lessons`, lesson, {withCredentials : true}).pipe(
       catchError(err => {
         console.error('Failed to post lesson', err);
         return throwError(() => new Error('Could not fetch lesson'));
@@ -35,8 +35,8 @@ export class LessonService {
     );
   }
 
-  getLessonsMetadataForCourseBySlug(courseSlug: string): Observable<LessonMetadata[]>{
-    return this.http.get<LessonMetadata[]>(`${this.apiUrl}/courses/slug/${courseSlug}/lessons`, {withCredentials : true}).pipe(
+  getLessonsMetadataForCourseBySlug(courseSlug: string): Observable<LessonMetadataResponse[]>{
+    return this.http.get<LessonMetadataResponse[]>(`${this.apiUrl}/courses/slug/${courseSlug}/lessons`, {withCredentials : true}).pipe(
       catchError(err => {
         console.error('Failed to post lesson', err);
         return throwError(() => new Error('Could not fetch lesson'));
@@ -44,8 +44,8 @@ export class LessonService {
     );
   }
 
-    getLessonsMetadataForCourseById(courseId: number): Observable<LessonMetadata[]>{
-    return this.http.get<LessonMetadata[]>(`${this.apiUrl}/courses/${courseId}/lessons`, {withCredentials : true}).pipe(
+    getLessonsMetadataForCourseById(courseId: number): Observable<LessonMetadataResponse[]>{
+    return this.http.get<LessonMetadataResponse[]>(`${this.apiUrl}/courses/${courseId}/lessons`, {withCredentials : true}).pipe(
       catchError(err => {
         console.error('Failed to post lesson', err);
         return throwError(() => new Error('Could not fetch lesson'));

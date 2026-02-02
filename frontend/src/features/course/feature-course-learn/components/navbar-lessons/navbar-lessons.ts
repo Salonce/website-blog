@@ -1,7 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { LessonService } from '../../../services/lesson-service/lesson-service';
-import { LessonMetadata } from '../../../models/lesson-metadata';
+import { LessonMetadataResponse } from '../../../models/lesson-metadata-response';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -13,7 +13,7 @@ import { CommonModule } from '@angular/common';
 export class NavbarLessons implements OnInit {
   // Reactive state
   courseSlug = signal<string | null>(null);
-  lessons = signal<LessonMetadata[]>([]);
+  lessons = signal<LessonMetadataResponse[]>([]);
 
   constructor(
     private route: ActivatedRoute,

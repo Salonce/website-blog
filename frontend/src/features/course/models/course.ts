@@ -1,9 +1,9 @@
-import { LessonMetadata } from "./lesson-metadata";
+import { LessonMetadataResponse } from "./lesson-metadata-response";
 
 export interface Course{
   id : number;
   name : string;
   slug : string;
   orderId : string;
-  lessons: LessonMetadata[];
+  lessons: LessonMetadataResponse[];
 }

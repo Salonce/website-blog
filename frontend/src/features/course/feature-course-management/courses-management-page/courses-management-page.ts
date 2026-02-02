@@ -3,8 +3,8 @@ import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { CourseService } from '../../services/course-service/course-service';
-import { CourseMetadata } from '../../models/course-metadata';
-import { NewCourse } from '../../models/new-course';
+import { CourseMetadata } from '../../models/course-metadata-response';
+import { CourseCreateRequest } from '../../models/course-create-request';
 
 @Component({
   selector: 'app-courses-management-page',
@@ -64,7 +64,7 @@ export class CoursesManagementPage implements OnInit {
     }
 
     this.isSubmitting.set(true);
-    const newCourse: NewCourse = { name };
+    const newCourse: CourseCreateRequest = { name };
 
     this.courseService.postCourse(newCourse).subscribe({
       next: () => {

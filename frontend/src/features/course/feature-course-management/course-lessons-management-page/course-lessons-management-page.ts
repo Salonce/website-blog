@@ -1,10 +1,10 @@
 import { Component, signal } from '@angular/core';
-import { LessonMetadata } from '../../models/lesson-metadata';
+import { LessonMetadataResponse } from '../../models/lesson-metadata-response';
 import { Course } from '../../models/course';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CourseService } from '../../services/course-service/course-service';
 import { LessonService } from '../../services/lesson-service/lesson-service';
-import { NewLesson } from '../../models/new-lesson';
+import { LessonCreateRequest } from '../../models/lesson-create-request';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -17,7 +17,7 @@ import { CommonModule } from '@angular/common';
 export class CourseLessonsManagementPage {
 courseId!: number;
   course = signal<Course | null>(null);
-  lessons = signal<LessonMetadata[]>([]);
+  lessons = signal<LessonMetadataResponse[]>([]);
   isLoading = signal(false);
   error = signal<string | null>(null);
   
@@ -54,7 +54,7 @@ courseId!: number;
     this.isLoading.set(true);
 
     this.lessonService.getLessonsMetadataForCourseById(this.courseId).subscribe({
-      next: (lessons: LessonMetadata[]) => {
+      next: (lessons: LessonMetadataResponse[]) => {
         this.lessons.set(lessons);
         this.isLoading.set(false);
       },
@@ -81,7 +81,7 @@ courseId!: number;
     if (!title) return;
 
     this.isSubmitting.set(true);
-    const newLesson: NewLesson = { 
+    const newLesson: LessonCreateRequest = { 
       title
     };
 

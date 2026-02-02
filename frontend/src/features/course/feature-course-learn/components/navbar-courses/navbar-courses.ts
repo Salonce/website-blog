@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/internal/Observable';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { CourseService } from '../../../services/course-service/course-service';
-import { CourseMetadata } from '../../../models/course-metadata';
+import { CourseMetadata } from '../../../models/course-metadata-response';
 
 @Component({
   selector: 'app-navbar-courses',

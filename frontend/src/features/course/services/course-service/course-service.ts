@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../../app/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
-import { CourseMetadata } from '../../models/course-metadata';
-import { NewCourse } from '../../models/new-course';
+import { CourseMetadata } from '../../models/course-metadata-response';
+import { CourseCreateRequest } from '../../models/course-create-request';
 import { Course } from '../../models/course';
 
 @Injectable({
@@ -38,8 +38,8 @@ export class CourseService {
 
 
 
-  postCourse(course: NewCourse) : Observable<NewCourse> {
-    return this.http.post<NewCourse>(`${this.apiUrl}/courses`, course, {withCredentials : true}).pipe(
+  postCourse(course: CourseCreateRequest) : Observable<CourseCreateRequest> {
+    return this.http.post<CourseCreateRequest>(`${this.apiUrl}/courses`, course, {withCredentials : true}).pipe(
       catchError(err => {
         console.error('Failed to post course', err);
         return throwError(() => new Error('Could not fetch course'));

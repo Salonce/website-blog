@@ -78,7 +78,7 @@ export class LessonEditPage implements OnInit, OnDestroy {
     this.isLoading.set(true);
     this.error.set(null);
 
-    this.lessonService.getLesson(this.lessonId)
+    this.lessonService.getLessonById(this.lessonId)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: lesson => {

@@ -8,6 +8,7 @@ import salonce.dev.todolist.course.domain.Lesson;
 import salonce.dev.todolist.course.presentation.dtos.LessonMetadataResponse;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface LessonRepository extends JpaRepository<Lesson, Long> {
@@ -40,4 +41,10 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
             ORDER BY l.orderId ASC
         """)
     List<LessonMetadataResponse> findAllMetadataByCourseId(@Param("id") Long id);
+
+    @Query("SELECT l FROM Lesson l JOIN l.course c WHERE c.slug = :courseSlug AND l.slug = :lessonSlug")
+    Optional<Lesson> findByCourseSlugAndLessonSlug(
+            @Param("courseSlug") String courseSlug,
+            @Param("lessonSlug") String lessonSlug
+    );
 }

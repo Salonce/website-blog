@@ -78,9 +78,16 @@ public class CourseService {
     // LESSONS
 
     @Transactional
-    public LessonResponse getLesson(AccountPrincipal principal, Long lessonId){
+    public LessonResponse getLessonById(AccountPrincipal principal, Long lessonId){
         requireAdmin(principal);
         Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(LessonNotFound::new);
+        return LessonMapper.toLessonResponse(lesson);
+    }
+
+    @Transactional
+    public LessonResponse getLessonBySlugs(AccountPrincipal principal, String courseSlug, String lessonSlug){
+        requireAdmin(principal);
+        Lesson lesson = lessonRepository.findByCourseSlugAndLessonSlug(courseSlug, lessonSlug).orElseThrow(LessonNotFound::new);
         return LessonMapper.toLessonResponse(lesson);
     }
 

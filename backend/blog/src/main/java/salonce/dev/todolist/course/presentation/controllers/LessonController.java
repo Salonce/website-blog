@@ -37,7 +37,12 @@ public class LessonController {
 
     @GetMapping("/api/lessons/{id}")
     public ResponseEntity<LessonResponse> getLessonById(@AuthenticationPrincipal AccountPrincipal principal, @PathVariable Long id){
-        return ResponseEntity.ok(courseService.getLesson(principal, id));
+        return ResponseEntity.ok(courseService.getLessonById(principal, id));
+    }
+
+    @GetMapping("/api/courses/slug/{courseSlug}/lessons/slug/{lessonsSlug}")
+    public ResponseEntity<LessonResponse> getLessonBySlugs(@AuthenticationPrincipal AccountPrincipal principal, @PathVariable String courseSlug, @PathVariable String lessonSlug){
+        return ResponseEntity.ok(courseService.getLessonBySlugs(principal, courseSlug, lessonSlug));
     }
 
     @DeleteMapping("/api/lessons/{id}")

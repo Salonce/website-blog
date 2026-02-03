@@ -20,19 +20,23 @@ export class LessonService {
 
   private readonly apiUrl = environment.apiUrl;
 
-  // getCourseById(id: number): Observable<Course>{
-  //   return this.http.get<Course>(`${this.apiUrl}/courses/${id}`, {
-  //     withCredentials: true
-  //   }).pipe(
-  //     catchError(err => {
-  //       console.error('Failed to fetch courses', err);
-  //       return throwError(() => new Error('Could not fetch courses'));
-  //     })
-  //   );
-  // }
 
-  getLesson(id: number): Observable<Lesson>{
+
+  getLessonById(id: number): Observable<Lesson>{
     return this.http.get<LessonResponse>(`${this.apiUrl}/lessons/${id}`, {
+      withCredentials: true
+    }).pipe(
+      map(dto => LessonMapper.fromDto(dto)),
+      retry(1),
+      catchError(err => {
+        console.error('Failed to fetch courses', err);
+        return throwError(() => new Error('Could not fetch courses'));
+      })
+    );
+  }
+
+  getLessonBySlugs(courseSlug: string, lessonSlug: string): Observable<Lesson>{
+    return this.http.get<LessonResponse>(`${this.apiUrl}/courses/${courseSlug}/lessons/${lessonSlug}`, {
       withCredentials: true
     }).pipe(
       map(dto => LessonMapper.fromDto(dto)),

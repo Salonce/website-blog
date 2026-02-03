@@ -12,19 +12,18 @@ import { CommonModule } from '@angular/common';
   selector: 'app-course-lessons-management-page',
   imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './course-lessons-management-page.html',
-  styleUrl: './course-lessons-management-page.css'
+  styleUrls: ['./course-lessons-management-page.css']
 })
 export class CourseLessonsManagementPage {
-courseId!: number;
+  courseId!: number;
   course = signal<CourseResponse | null>(null);
   lessons = signal<LessonMetadataResponse[]>([]);
   isLoading = signal(false);
   error = signal<string | null>(null);
-  
+
   // Add lesson form
   showAddForm = signal(false);
   newLessonTitle = signal('');
-  newLessonContent = signal('');
   isSubmitting = signal(false);
 
   constructor(
@@ -52,7 +51,6 @@ courseId!: number;
 
   loadLessons() {
     this.isLoading.set(true);
-
     this.lessonService.getLessonsMetadataForCourseById(this.courseId).subscribe({
       next: (lessons: LessonMetadataResponse[]) => {
         this.lessons.set(lessons);
@@ -70,27 +68,20 @@ courseId!: number;
     this.showAddForm.update(v => !v);
     if (!this.showAddForm()) {
       this.newLessonTitle.set('');
-      this.newLessonContent.set('');
     }
   }
 
   addLesson() {
     const title = this.newLessonTitle().trim();
-    const content = this.newLessonContent().trim();
-    
     if (!title) return;
 
     this.isSubmitting.set(true);
-    const newLesson: LessonCreateRequest = { 
-      title
-    };
+    const newLesson: LessonCreateRequest = { title };
 
     this.lessonService.postLesson(this.courseId, newLesson).subscribe({
       next: () => {
-        this.loadCourse();
         this.loadLessons();
         this.newLessonTitle.set('');
-        this.newLessonContent.set('');
         this.showAddForm.set(false);
         this.isSubmitting.set(false);
       },
@@ -103,26 +94,20 @@ courseId!: number;
   }
 
   editLesson(lessonId: number) {
-    // Navigate to lesson editor or open modal
     this.router.navigate(['/dashboard/courses', this.courseId, 'lessons', lessonId]);
   }
 
   deleteLesson(lessonId: number, title: string) {
-    if (!confirm(`Are you sure you want to delete "${title}"?`)) {
-      return;
-    }
+    if (!confirm(`Are you sure you want to delete "${title}"?`)) return;
 
     this.lessonService.removeLesson(lessonId).subscribe({
-      next: () => {
-        this.lessons.update(list => list.filter(l => l.id !== lessonId));
-      },
+      next: () => this.lessons.update(list => list.filter(l => l.id !== lessonId)),
       error: (err) => {
         this.error.set('Failed to delete lesson');
         console.error(err);
       }
     });
   }
-
 
   backToCourses() {
     this.router.navigate(['/dashboard/courses-management']);

@@ -3,8 +3,8 @@ import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { CourseService } from '../../services/course-service/course-service';
-import { CourseMetadata } from '../../models/course-metadata-response';
-import { CourseCreateRequest } from '../../models/course-create-request';
+import { CourseMetadataResponse } from '../../dtos/course-metadata-response';
+import { CourseCreateRequest } from '../../dtos/course-create-request';
 
 @Component({
   selector: 'app-courses-management-page',
@@ -14,7 +14,7 @@ import { CourseCreateRequest } from '../../models/course-create-request';
 })
 export class CoursesManagementPage implements OnInit {
 
-  courses = signal<CourseMetadata[]>([]);
+  courses = signal<CourseMetadataResponse[]>([]);
   isLoading = signal(false);
   error = signal<string | null>(null);
   

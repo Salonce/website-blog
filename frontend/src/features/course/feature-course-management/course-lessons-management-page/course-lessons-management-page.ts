@@ -1,10 +1,10 @@
 import { Component, signal } from '@angular/core';
-import { LessonMetadataResponse } from '../../models/lesson-metadata-response';
-import { Course } from '../../models/course';
+import { LessonMetadataResponse } from '../../dtos/lesson-metadata-response';
+import { CourseResponse } from '../../dtos/course-response';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CourseService } from '../../services/course-service/course-service';
 import { LessonService } from '../../services/lesson-service/lesson-service';
-import { LessonCreateRequest } from '../../models/lesson-create-request';
+import { LessonCreateRequest } from '../../dtos/lesson-create-request';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -16,7 +16,7 @@ import { CommonModule } from '@angular/common';
 })
 export class CourseLessonsManagementPage {
 courseId!: number;
-  course = signal<Course | null>(null);
+  course = signal<CourseResponse | null>(null);
   lessons = signal<LessonMetadataResponse[]>([]);
   isLoading = signal(false);
   error = signal<string | null>(null);
@@ -104,7 +104,7 @@ courseId!: number;
 
   editLesson(lessonId: number) {
     // Navigate to lesson editor or open modal
-    this.router.navigate(['/dashboard/courses', this.courseId, 'lessons', lessonId, 'edit']);
+    this.router.navigate(['/dashboard/courses', this.courseId, 'lessons', lessonId]);
   }
 
   deleteLesson(lessonId: number, title: string) {

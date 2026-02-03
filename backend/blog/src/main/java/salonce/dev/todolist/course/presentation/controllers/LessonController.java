@@ -7,10 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import salonce.dev.todolist.account.infrastructure.security.AccountPrincipal;
 import salonce.dev.todolist.course.application.CourseService;
-import salonce.dev.todolist.course.presentation.dtos.ContentBlockCreateRequest;
-import salonce.dev.todolist.course.presentation.dtos.LessonCreateRequest;
-import salonce.dev.todolist.course.presentation.dtos.LessonMetadataResponse;
-import salonce.dev.todolist.course.presentation.dtos.ContentBlockResponse;
+import salonce.dev.todolist.course.presentation.dtos.*;
 
 import java.util.List;
 
@@ -38,6 +35,11 @@ public class LessonController {
         return ResponseEntity.ok(courseService.saveLesson(principal, courseId, lessonCreateRequest));
     }
 
+    @GetMapping("/api/lessons/{id}")
+    public ResponseEntity<LessonResponse> getLessonById(@AuthenticationPrincipal AccountPrincipal principal, @PathVariable Long id){
+        return ResponseEntity.ok(courseService.getLesson(principal, id));
+    }
+
     @DeleteMapping("/api/lessons/{id}")
     public ResponseEntity<Void> deleteLesson(@AuthenticationPrincipal AccountPrincipal principal, @PathVariable Long id){
         courseService.deleteLesson(principal, id);
@@ -46,13 +48,13 @@ public class LessonController {
 
     // Blocks
 
-    @GetMapping("/api/lessons/{lessonId}/blocks")
+    @GetMapping("/api/lessons/{lessonId}/contentblocks")
     public ResponseEntity<List<ContentBlockResponse>> getBlocksByLessonId(@PathVariable Long lessonId){
         List<ContentBlockResponse> blocks = courseService.getContentBlocksByLessonId(lessonId);
         return ResponseEntity.ok(blocks);
     }
 
-    @PostMapping("/api/lessons/{lessonId}/blocks")
+    @PostMapping("/api/lessons/{lessonId}/contentblocks")
     public ResponseEntity<ContentBlockResponse> saveBlock(@AuthenticationPrincipal AccountPrincipal principal, @PathVariable Long lessonId, @RequestBody ContentBlockCreateRequest contentBlockCreateRequest){
         ContentBlockResponse block = courseService.saveContentBlock(lessonId, contentBlockCreateRequest, principal);
         return ResponseEntity.ok(block);

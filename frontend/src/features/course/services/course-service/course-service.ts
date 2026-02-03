@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../../app/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
-import { CourseMetadata } from '../../models/course-metadata-response';
-import { CourseCreateRequest } from '../../models/course-create-request';
-import { Course } from '../../models/course';
+import { CourseMetadataResponse } from '../../dtos/course-metadata-response';
+import { CourseCreateRequest } from '../../dtos/course-create-request';
+import { CourseResponse } from '../../dtos/course-response';
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +14,8 @@ export class CourseService {
 
   private readonly apiUrl = environment.apiUrl;
 
-  getCoursesMetadata(): Observable<CourseMetadata[]>{
-    return this.http.get<CourseMetadata[]>(`${this.apiUrl}/courses`, {
+  getCoursesMetadata(): Observable<CourseMetadataResponse[]>{
+    return this.http.get<CourseMetadataResponse[]>(`${this.apiUrl}/courses`, {
       withCredentials: true
     }).pipe(
       catchError(err => {
@@ -25,8 +25,8 @@ export class CourseService {
     );
   }
 
-  getCourseById(id: number): Observable<Course>{
-    return this.http.get<Course>(`${this.apiUrl}/courses/${id}`, {
+  getCourseById(id: number): Observable<CourseResponse>{
+    return this.http.get<CourseResponse>(`${this.apiUrl}/courses/${id}`, {
       withCredentials: true
     }).pipe(
       catchError(err => {

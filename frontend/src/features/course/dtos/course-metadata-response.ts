@@ -1,4 +1,4 @@
-export interface CourseMetadata{
+export interface CourseMetadataResponse{
   id : number;
   name : string;
   slug : string;

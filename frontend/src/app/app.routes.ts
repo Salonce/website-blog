@@ -11,6 +11,7 @@ import { CoursesManagementPage } from '../features/course/feature-course-managem
 import { CourseLayout } from '../features/course/feature-course-learn/course-layout/course-layout';
 import { CourseLessonsManagementPage } from '../features/course/feature-course-management/course-lessons-management-page/course-lessons-management-page';
 import { ArticlesPage } from '../features/article/feature-article-reader/articles-page/articles-page';
+import { LessonEditPage } from '../features/course/feature-course-management/lesson-edit-page/lesson-edit-page';
 
 export const routes: Routes = [
     {
@@ -37,7 +38,8 @@ export const routes: Routes = [
             { path: 'article-management', component: ArticleAdminListPage },
             { path: 'articles/:id/edit', component: ArticleEditPage },
             { path: 'courses-management', component: CoursesManagementPage },
-            { path: 'courses/:id/lessons', component: CourseLessonsManagementPage } 
+            { path: 'courses/:id/lessons', component: CourseLessonsManagementPage },
+            { path: 'courses/:courseId/lessons/:lessonId', component: LessonEditPage } 
         ]
     }
 ];

@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/internal/Observable';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { CourseService } from '../../../services/course-service/course-service';
-import { CourseMetadata } from '../../../models/course-metadata-response';
+import { CourseMetadataResponse } from '../../../dtos/course-metadata-response';
 
 @Component({
   selector: 'app-navbar-courses',
@@ -14,7 +14,7 @@ import { CourseMetadata } from '../../../models/course-metadata-response';
 export class NavbarCourses {
   isOpen = false;
   
-  coursesMetadata$: Observable<CourseMetadata[]>;
+  coursesMetadata$: Observable<CourseMetadataResponse[]>;
 
   constructor(private courseService: CourseService){
     this.coursesMetadata$ = this.courseService.getCoursesMetadata();

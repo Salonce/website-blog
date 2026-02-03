@@ -45,20 +45,20 @@ public class CourseService {
     @Transactional
     public CourseResponse getCourseViewById(Long id){
         Course course = courseRepository.findById(id).orElseThrow(CourseNotFound::new);
-        return CourseMapper.toCourseMetadataResponse(course);
+        return CourseMapper.toCourseResponse(course);
     }
 
     @Transactional
     public CourseResponse getCourseBySlug(String slug){
         Course course = courseRepository.findBySlug(slug).orElseThrow(CourseNotFound::new);
-        return CourseMapper.toCourseMetadataResponse(course);
+        return CourseMapper.toCourseResponse(course);
     }
 
     @Transactional
     public CourseResponse saveCourse(AccountPrincipal principal, CourseCreateRequest courseCreateRequest){
         requireAdmin(principal);
         Course course = new Course(courseCreateRequest.name(), generateSlug(courseCreateRequest.name()), getNextCourseOrderIndex());
-        return CourseMapper.toCourseMetadataResponse(courseRepository.save(course));
+        return CourseMapper.toCourseResponse(courseRepository.save(course));
     }
 
     @Transactional
@@ -76,6 +76,13 @@ public class CourseService {
     }
 
     // LESSONS
+
+    @Transactional
+    public LessonResponse getLesson(AccountPrincipal principal, Long lessonId){
+        requireAdmin(principal);
+        Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(LessonNotFound::new);
+        return LessonMapper.toLessonResponse(lesson);
+    }
 
     @Transactional
     public void deleteLesson(AccountPrincipal principal, Long lessonId){

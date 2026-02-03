@@ -1,1 +1,34 @@
-<p>lesson-read-page works!</p>
+@if (lesson) {
+
+  <div class="lesson-read-page">
+
+    <h1 class="lesson-title">
+      {{ lesson.title }}
+    </h1>
+
+    <div class="lesson-content">
+
+      @for (block of lesson.contentBlocks; track block.id) {
+
+        @if (isTextBlock(block)) {
+          <div class="content-block text-block">
+            <div
+              class="text-content"
+              [innerHTML]="getSafeHtml(block.content)">
+            </div>
+          </div>
+        }
+
+        <!-- Future blocks -->
+        <!--
+        @if (block.type === 'IMAGE') { ... }
+        -->
+
+      }
+
+    </div>
+  </div>
+
+} @else {
+  <p>Loading lesson...</p>
+}

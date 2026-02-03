@@ -36,7 +36,7 @@ export class LessonService {
   }
 
   getLessonBySlugs(courseSlug: string, lessonSlug: string): Observable<Lesson>{
-    return this.http.get<LessonResponse>(`${this.apiUrl}/courses/${courseSlug}/lessons/${lessonSlug}`, {
+    return this.http.get<LessonResponse>(`${this.apiUrl}/courses/slug/${courseSlug}/lessons/slug/${lessonSlug}`, {
       withCredentials: true
     }).pipe(
       map(dto => LessonMapper.fromDto(dto)),

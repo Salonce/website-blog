@@ -27,7 +27,7 @@ export class NavbarLessons implements OnInit {
     console.log('All route params:', params);
     console.log('Keys:', params.keys);
     
-    const slug = params.get('courseSlug'); // Try 'courseSlug' (camelCase)
+    const slug = params.get('courseSlug'); 
     console.log('Course slug:', slug);
     
     if (slug) {

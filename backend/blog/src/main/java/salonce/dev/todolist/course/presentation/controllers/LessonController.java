@@ -40,7 +40,7 @@ public class LessonController {
         return ResponseEntity.ok(courseService.getLessonById(principal, id));
     }
 
-    @GetMapping("/api/courses/slug/{courseSlug}/lessons/slug/{lessonsSlug}")
+    @GetMapping("/api/courses/slug/{courseSlug}/lessons/slug/{lessonSlug}")
     public ResponseEntity<LessonResponse> getLessonBySlugs(@AuthenticationPrincipal AccountPrincipal principal, @PathVariable String courseSlug, @PathVariable String lessonSlug){
         return ResponseEntity.ok(courseService.getLessonBySlugs(principal, courseSlug, lessonSlug));
     }

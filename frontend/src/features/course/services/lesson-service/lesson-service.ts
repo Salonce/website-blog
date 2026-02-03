@@ -59,7 +59,7 @@ export class LessonService {
   }
 
   updateLesson(id: number, lessonUpdateRequest: LessonUpdateRequest) : Observable<LessonResponse> {
-    return this.http.patch<LessonResponse>(`${this.apiUrl}/courses/${id}`, lessonUpdateRequest, {withCredentials : true}).pipe(
+    return this.http.patch<LessonResponse>(`${this.apiUrl}/lessons/${id}`, lessonUpdateRequest, {withCredentials : true}).pipe(
       catchError(err => {
         console.error('Failed to update lesson', err);
         return throwError(() => new Error('Could not update lesson'));

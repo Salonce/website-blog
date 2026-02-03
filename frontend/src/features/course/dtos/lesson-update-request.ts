@@ -1,3 +1,4 @@
 export interface LessonUpdateRequest{
-    title: string;
+    title?: string;
+    slug?: string;
 }

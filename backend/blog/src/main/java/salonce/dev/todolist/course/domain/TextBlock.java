@@ -18,6 +18,10 @@ public class TextBlock extends ContentBlock {
         this.content = content;
     }
 
+    public TextBlock() {
+        this.content = content;
+    }
+
     @Override
     public String type() {
         return "TEXT";

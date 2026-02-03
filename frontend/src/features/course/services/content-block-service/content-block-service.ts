@@ -16,7 +16,7 @@ export class ContentBlockService {
 
   constructor(private http: HttpClient) {}
 
-  createContentBlock(lessonId: number, contentBlock: ContentBlockCreateRequest): Observable<ContentBlockCreateRequest> {
+  addContentBlock(lessonId: number, contentBlock: ContentBlockCreateRequest): Observable<ContentBlockCreateRequest> {
     return this.http.post<ContentBlockCreateRequest>(`${this.apiUrl}/lessons/${lessonId}/contentblocks`, contentBlock, { withCredentials: true })
     .pipe(
       catchError(err => {

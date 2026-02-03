@@ -9,6 +9,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { LessonService } from '../../services/lesson-service/lesson-service';
 import { Lesson } from '../../models/lesson';
 import { ContentBlock, TextBlock } from '../../models/content-block';
+import { ContentBlockService } from '../../services/content-block-service/content-block-service';
 
 @Component({
   selector: 'app-lesson-edit-page',
@@ -45,7 +46,8 @@ export class LessonEditPage implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private lessonService: LessonService
+    private lessonService: LessonService,
+    private contentBlockService: ContentBlockService
   ) {}
 
   ngOnInit(): void {
@@ -130,52 +132,31 @@ export class LessonEditPage implements OnInit, OnDestroy {
     this.isSubmitting.set(true);
     this.error.set(null);
 
-    // TODO: Replace with actual API call
-    // For now, optimistic update with temporary ID
-    const newBlock: TextBlock = {
-      id: Date.now(), // Temporary - backend should provide real ID
-      position: this.nextPosition(),
+    // Create the block request
+    const blockRequest = {
       type: 'TEXT',
-      content
+      data: { content: content }
     };
 
-    // Optimistic update
-    this.contentBlocks.update(blocks => [...blocks, newBlock]);
-
-    // Reset form
-    this.newBlockContent.set('');
-    this.showAddBlockForm.set(false);
-    this.isSubmitting.set(false);
-
-    // TODO: Actual API call
-    /*
-    this.lessonService.addContentBlock(this.lessonId, {
-      type: 'TEXT',
-      position: this.nextPosition(),
-      data: { text: content }
-    })
-    .pipe(takeUntil(this.destroy$))
-    .subscribe({
-      next: createdBlock => {
-        // Replace temporary block with real one from backend
-        this.contentBlocks.update(blocks => 
-          blocks.map(b => b.id === newBlock.id ? createdBlock : b)
-        );
-        this.isSubmitting.set(false);
-        this.showAddBlockForm.set(false);
-        this.newBlockContent.set('');
-      },
-      error: err => {
-        console.error('Failed to add block:', err);
-        this.error.set(err.message || 'Failed to add block');
-        // Rollback optimistic update
-        this.contentBlocks.update(blocks => 
-          blocks.filter(b => b.id !== newBlock.id)
-        );
-        this.isSubmitting.set(false);
-      }
-    });
-    */
+    this.contentBlockService.addContentBlock(this.lessonId, blockRequest)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: createdBlock => {
+          // Add the new block to the list
+          // Note: You may need to convert the response to ContentBlock if needed
+          this.contentBlocks.update(blocks => [...blocks, createdBlock as any]);
+          
+          // Reset form state
+          this.isSubmitting.set(false);
+          this.showAddBlockForm.set(false);
+          this.newBlockContent.set('');
+        },
+        error: err => {
+          console.error('Failed to add block:', err);
+          this.error.set(err.message || 'Failed to add block');
+          this.isSubmitting.set(false);
+        }
+      });
   }
 
   /**
@@ -186,26 +167,26 @@ export class LessonEditPage implements OnInit, OnDestroy {
       return;
     }
 
-    // Optimistic update
+    // Store previous state for rollback
     const previousBlocks = this.contentBlocks();
+    
+    // Optimistic update
     this.contentBlocks.update(blocks => blocks.filter(b => b.id !== blockId));
 
-    // TODO: Actual API call
-    /*
-    this.lessonService.deleteContentBlock(blockId)
+    this.contentBlockService.removeContentBlock(blockId)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: () => {
-          // Success - already removed optimistically
+          // Success - block already removed optimistically
+          console.log('Block deleted successfully');
         },
         error: err => {
           console.error('Failed to delete block:', err);
           this.error.set(err.message || 'Failed to delete block');
-          // Rollback
+          // Rollback optimistic update
           this.contentBlocks.set(previousBlocks);
         }
       });
-    */
   }
 
   /**

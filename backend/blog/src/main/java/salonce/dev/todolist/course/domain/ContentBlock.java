@@ -15,21 +15,15 @@ public abstract class ContentBlock {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "lesson_id")
     private Lesson lesson;
 
+    @Setter
     private int position;
 
-    void setLesson(Lesson lesson) {
-        this.lesson = lesson;
-    }
-
-    protected ContentBlock() {} // JPA
-
-    protected ContentBlock(int position) {
-        this.position = position;
-    }
+    protected ContentBlock() {} //
 
     public abstract String type();
 }

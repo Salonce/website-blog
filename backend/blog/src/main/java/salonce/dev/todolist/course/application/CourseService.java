@@ -125,7 +125,8 @@ public class CourseService {
         Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(LessonNotFound::new);
         ContentBlock contentBlock = ContentBlockMapper.createBlockFromRequest(contentBlockCreateRequest);
         lesson.addContentBlock(contentBlock);
-        // here should set position
+        int lastPosition = contentBlockRepository.findMaxPositionByLessonId(lessonId);
+        contentBlock.setPosition(lastPosition + 1);
         contentBlockRepository.save(contentBlock);
         return ContentBlockMapper.toContentBlockResponse(contentBlock);
     }

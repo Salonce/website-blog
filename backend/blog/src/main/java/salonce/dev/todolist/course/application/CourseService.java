@@ -57,7 +57,8 @@ public class CourseService {
     @Transactional
     public CourseResponse updateCourse(Long id, CourseUpdateRequest request){
         Course course = courseRepository.findById(id).orElseThrow(CourseNotFound::new);
-        if (request.name() != null) course.setName(course.getName());
+        System.out.println(request.name());
+        if (request.name() != null) course.setName(request.name());
         return CourseMapper.toCourseResponse(course);
     }
 

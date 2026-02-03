@@ -5,9 +5,11 @@ import { Router, RouterModule } from '@angular/router';
 import { CourseService } from '../../services/course-service/course-service';
 import { CourseMetadataResponse } from '../../dtos/course-metadata-response';
 import { CourseCreateRequest } from '../../dtos/course-create-request';
+import { CourseUpdateRequest } from '../../dtos/course-update-request';
 
 @Component({
   selector: 'app-courses-management-page',
+  standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './courses-management-page.html',
   styleUrl: './courses-management-page.css'
@@ -22,6 +24,10 @@ export class CoursesManagementPage implements OnInit {
   showAddForm = signal(false);
   newCourseName = signal('');
   isSubmitting = signal(false);
+
+  // Inline editing
+  editingCourseId = signal<number | null>(null);
+  editingCourseName = signal('');
 
   constructor(
     private courseService: CourseService,
@@ -56,7 +62,7 @@ export class CoursesManagementPage implements OnInit {
     }
   }
 
- addCourse() {
+  addCourse() {
     const name = this.newCourseName().trim();
     
     if (!name) {
@@ -95,6 +101,76 @@ export class CoursesManagementPage implements OnInit {
         console.error(err);
       }
     });
+  }
+
+  /**
+   * Start editing a course name
+   */
+  startEditCourse(course: CourseMetadataResponse) {
+    this.editingCourseId.set(course.id);
+    this.editingCourseName.set(course.name);
+  }
+
+  /**
+   * Cancel editing
+   */
+  cancelEditCourse() {
+    this.editingCourseId.set(null);
+    this.editingCourseName.set('');
+  }
+
+  /**
+   * Save edited course name
+   */
+  saveEditCourse(courseId: number) {
+    const newName = this.editingCourseName().trim();
+    
+    if (!newName) {
+      this.error.set('Course name cannot be empty');
+      return;
+    }
+
+    // Find the original course to check if name actually changed
+    const originalCourse = this.courses().find(c => c.id === courseId);
+    if (originalCourse && originalCourse.name === newName) {
+      // No change, just cancel editing
+      this.cancelEditCourse();
+      return;
+    }
+
+    const updateRequest: CourseUpdateRequest = { name: newName };
+
+    this.courseService.updateCourse(courseId, updateRequest).subscribe({
+      next: (updatedCourse) => {
+        // Update the course in the list
+        this.courses.update(list => 
+          list.map(c => c.id === courseId ? { ...c, name: updatedCourse.name } : c)
+        );
+        this.cancelEditCourse();
+      },
+      error: (err) => {
+        this.error.set('Failed to update course name');
+        console.error(err);
+      }
+    });
+  }
+
+  /**
+   * Handle Enter key press in edit input
+   */
+  onEditKeyPress(event: KeyboardEvent, courseId: number) {
+    if (event.key === 'Enter') {
+      this.saveEditCourse(courseId);
+    } else if (event.key === 'Escape') {
+      this.cancelEditCourse();
+    }
+  }
+
+  /**
+   * Check if a course is currently being edited
+   */
+  isEditingCourse(courseId: number): boolean {
+    return this.editingCourseId() === courseId;
   }
 
   manageLessons(courseId: number) {

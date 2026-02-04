@@ -105,7 +105,32 @@
                   </div>
 
                   @if (block.type === 'TEXT') {
-                    <div class="mt-2 prose max-w-none" [innerHTML]="getTextBlockContent(block)"></div>
+                    @if (isEditingBlock(block.id)) {
+                      <!-- Edit Mode with Quill -->
+                      <div class="mt-2">
+                        <app-quill-editor
+                          [content]="editingBlockContent()"
+                          (contentChange)="onEditQuillContentChange($event)">
+                        </app-quill-editor>
+                        <div class="flex gap-2 mt-3">
+                          <button
+                            (click)="saveEditBlock(block.id)"
+                            [disabled]="isSubmitting()"
+                            class="px-4 py-2 bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white text-sm font-medium rounded transition-colors duration-150">
+                            {{ isSubmitting() ? 'Saving...' : 'Save' }}
+                          </button>
+                          <button
+                            (click)="cancelEditBlock()"
+                            [disabled]="isSubmitting()"
+                            class="px-4 py-2 bg-gray-200 hover:bg-gray-300 disabled:bg-gray-100 text-gray-700 text-sm font-medium rounded transition-colors duration-150">
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    } @else {
+                      <!-- View Mode -->
+                      <div class="mt-2 prose max-w-none" [innerHTML]="getTextBlockContent(block)"></div>
+                    }
                   }
 
                   @if (block.type === 'IMAGE') {
@@ -117,12 +142,25 @@
                   }
                 </div>
 
-                <button
-                  (click)="removeBlock(block.id)"
-                  [disabled]="isSubmitting()"
-                  class="ml-4 text-red-600 hover:text-red-900 disabled:text-red-400 text-sm font-medium transition-colors duration-150">
-                  Delete
-                </button>
+                <!-- Action Buttons -->
+                @if (!isEditingBlock(block.id)) {
+                  <div class="ml-4 flex gap-2">
+                    @if (block.type === 'TEXT') {
+                      <button
+                        (click)="startEditBlock(block)"
+                        [disabled]="isSubmitting()"
+                        class="text-blue-600 hover:text-blue-900 disabled:text-blue-400 text-sm font-medium transition-colors duration-150">
+                        Edit
+                      </button>
+                    }
+                    <button
+                      (click)="removeBlock(block.id)"
+                      [disabled]="isSubmitting()"
+                      class="text-red-600 hover:text-red-900 disabled:text-red-400 text-sm font-medium transition-colors duration-150">
+                      Delete
+                    </button>
+                  </div>
+                }
               </div>
             </div>
           }

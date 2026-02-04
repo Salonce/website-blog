@@ -10,6 +10,8 @@ import { LessonService } from '../../services/lesson-service/lesson-service';
 import { Lesson } from '../../models/lesson';
 import { ContentBlock, TextBlock } from '../../models/content-block';
 import { ContentBlockService } from '../../services/content-block-service/content-block-service';
+import { ContentBlockUpdateRequest } from '../../dtos/content-block-update-request';
+import { ContentBlockMapper } from '../../content-block-mapper';
 import { QuillEditor } from '../../../../shared/components/quill-editor/quill-editor';
 
 @Component({
@@ -36,6 +38,10 @@ export class LessonEditPage implements OnInit, OnDestroy {
   // Add block form
   showAddBlockForm = signal(false);
   newBlockContent = signal('');
+
+  // Edit block state
+  editingBlockId = signal<number | null>(null);
+  editingBlockContent = signal('');
 
   // Computed
   hasBlocks = computed(() => this.contentBlocks().length > 0);
@@ -93,8 +99,18 @@ export class LessonEditPage implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Handle Quill content change for new block
+   */
   onQuillContentChange(content: string): void {
     this.newBlockContent.set(content);
+  }
+
+  /**
+   * Handle Quill content change for editing block
+   */
+  onEditQuillContentChange(content: string): void {
+    this.editingBlockContent.set(content);
   }
 
   toggleAddBlockForm(): void {
@@ -128,8 +144,10 @@ export class LessonEditPage implements OnInit, OnDestroy {
     this.contentBlockService.addContentBlock(this.lessonId, blockRequest)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: createdBlock => {
-          this.contentBlocks.update(blocks => [...blocks, createdBlock as any]);
+        next: response => {
+          // Map response to ContentBlock
+          const createdBlock = ContentBlockMapper.fromResponse(response);
+          this.contentBlocks.update(blocks => [...blocks, createdBlock]);
           this.isSubmitting.set(false);
           this.showAddBlockForm.set(false);
           this.newBlockContent.set('');
@@ -140,6 +158,79 @@ export class LessonEditPage implements OnInit, OnDestroy {
           this.isSubmitting.set(false);
         }
       });
+  }
+
+  /**
+   * Start editing a block
+   */
+  startEditBlock(block: ContentBlock): void {
+    if (this.isTextBlock(block)) {
+      this.editingBlockId.set(block.id);
+      this.editingBlockContent.set(block.content);
+    }
+  }
+
+  /**
+   * Cancel editing
+   */
+  cancelEditBlock(): void {
+    this.editingBlockId.set(null);
+    this.editingBlockContent.set('');
+  }
+
+  /**
+   * Save edited block
+   */
+  saveEditBlock(blockId: number): void {
+    const content = this.editingBlockContent().trim();
+    
+    if (!content || content === '<p><br></p>' || content === '<p></p>') {
+      this.error.set('Content cannot be empty');
+      return;
+    }
+
+    if (this.isSubmitting()) {
+      return;
+    }
+
+    this.isSubmitting.set(true);
+    this.error.set(null);
+
+    // Create the update request
+    const updateRequest: ContentBlockUpdateRequest = {
+      type: 'TEXT',
+      data: { content: content }
+    };
+
+    this.contentBlockService.updateContentBlock(blockId, updateRequest)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          // Map response to ContentBlock
+          const updatedBlock = ContentBlockMapper.fromResponse(response);
+          
+          // Update the block in the list
+          this.contentBlocks.update(blocks => 
+            blocks.map(b => b.id === blockId ? updatedBlock : b)
+          );
+          
+          this.isSubmitting.set(false);
+          this.editingBlockId.set(null);
+          this.editingBlockContent.set('');
+        },
+        error: err => {
+          console.error('Failed to update block:', err);
+          this.error.set(err.message || 'Failed to update block');
+          this.isSubmitting.set(false);
+        }
+      });
+  }
+
+  /**
+   * Check if currently editing a specific block
+   */
+  isEditingBlock(blockId: number): boolean {
+    return this.editingBlockId() === blockId;
   }
 
   removeBlock(blockId: number): void {

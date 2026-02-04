@@ -42,4 +42,30 @@ export class LessonMapper {
         return baseBlock as ContentBlock;
     }
   }
+
+  static blockFromResponse(response: ContentBlockResponse): ContentBlock {
+    switch (response.type) {
+      case 'TEXT':
+        return {
+          id: response.id,
+          position: response.position,
+          type: response.type,
+          content: response.data['content']
+        } as TextBlock;
+      
+      // Add other block types here as needed
+      // case 'IMAGE':
+      //   return { ... } as ImageBlock;
+      
+      default:
+        throw new Error(`Unknown block type: ${response.type}`);
+    }
+  }
+
+  /**
+   * Map array of responses
+   */
+  static blocksFromResponseArray(responses: ContentBlockResponse[]): ContentBlock[] {
+    return responses.map(r => this.blockFromResponse(r));
+  }
 }

@@ -12,13 +12,13 @@ import salonce.dev.todolist.account.presentation.dtos.UserResponse;
 @RequiredArgsConstructor
 @RestController
 public class UserController {
-    @GetMapping("/api/users")
-    public ResponseEntity<UserResponse> getUsers(@AuthenticationPrincipal AccountPrincipal principal){
-        return ResponseEntity.ok(principal);
-    }
-
-    @PatchMapping("/api/user")
-    public ResponseEntity<UserResponse> getUsers(@AuthenticationPrincipal AccountPrincipal principal){
-        return ResponseEntity.ok(principal);
-    }
+//    @GetMapping("/api/users")
+//    public ResponseEntity<UserResponse> getUsers(@AuthenticationPrincipal AccountPrincipal principal){
+//        return ResponseEntity.ok(principal);
+//    }
+//
+//    @PatchMapping("/api/user")
+//    public ResponseEntity<UserResponse> getUsers(@AuthenticationPrincipal AccountPrincipal principal){
+//        return ResponseEntity.ok(principal);
+//    }
 }

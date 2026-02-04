@@ -9,6 +9,7 @@ import salonce.dev.todolist.account.infrastructure.security.AccountPrincipal;
 import salonce.dev.todolist.account.presentation.AccountMapper;
 import salonce.dev.todolist.account.presentation.AccountNotFound;
 import salonce.dev.todolist.account.presentation.dtos.UserResponse;
+import salonce.dev.todolist.account.presentation.dtos.UserUpdateRequest;
 
 import java.util.List;
 
@@ -29,7 +30,12 @@ public class UserService {
         return AccountMapper.toUserResponse(account);
     }
 
-
+    public UserResponse updateUser(AccountPrincipal principal, Long id, UserUpdateRequest request){
+        requireAdmin(principal);
+        Account account = accountRepository.findById(id).orElseThrow(AccountNotFound::new);
+        // HERE UPDATE USER
+        return AccountMapper.toUserResponse(account);
+    }
 
     private void requireAdmin(AccountPrincipal principal){
         Account account = accountService.findAccount(principal.id());

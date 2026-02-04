@@ -8,8 +8,11 @@ import salonce.dev.todolist.account.domain.Account;
 import salonce.dev.todolist.account.domain.Role;
 import salonce.dev.todolist.account.infrastructure.AccountRepository;
 import salonce.dev.todolist.account.infrastructure.security.AccountPrincipal;
+import salonce.dev.todolist.account.presentation.AccountMapper;
+import salonce.dev.todolist.account.presentation.dtos.AccountResponse;
 import salonce.dev.todolist.account.presentation.dtos.PatchProfileRequest;
 import salonce.dev.todolist.account.presentation.AccountNotFound;
+import salonce.dev.todolist.account.presentation.dtos.UserResponse;
 
 @RequiredArgsConstructor
 @Service
@@ -37,10 +40,26 @@ public class AccountService {
     }
 
     @Transactional
-    public Account updateProfile(Long id, PatchProfileRequest request){
+    public UserResponse addRole(AccountPrincipal principal, Long id, Role role){
+        requireAdmin(principal);
+        Account account = accountRepository.findById(id).orElseThrow(AccountNotFound::new);
+        account.addRole(role);
+        return AccountMapper.toUserResponse(account);
+    }
+
+    @Transactional
+    public UserResponse removeRole(AccountPrincipal principal, Long id, Role role){
+        requireAdmin(principal);
+        Account account = accountRepository.findById(id).orElseThrow(AccountNotFound::new);
+        account.removeRole(role);
+        return AccountMapper.toUserResponse(account);
+    }
+
+    @Transactional
+    public AccountResponse updateProfile(Long id, PatchProfileRequest request){
         Account account = accountRepository.findById(id).orElseThrow(AccountNotFound::new);
         account.setName(request.name());
-        return accountRepository.save(account);
+        return AccountMapper.toAccountResponse(accountRepository.save(account));
     }
 
     private void requireAdmin(AccountPrincipal principal){

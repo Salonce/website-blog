@@ -28,6 +28,6 @@ public class AccountController {
 
     @PatchMapping("/api/profile")
     public ResponseEntity<AccountResponse> patchProfile(@AuthenticationPrincipal AccountPrincipal principal, @RequestBody PatchProfileRequest patchProfileRequest){
-        return ResponseEntity.ok(AccountMapper.toAccountResponse(accountService.updateProfile(principal.id(), patchProfileRequest)));
+        return ResponseEntity.ok(accountService.updateProfile(principal.id(), patchProfileRequest));
     }
 }

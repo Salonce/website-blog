@@ -154,6 +154,14 @@ public class CourseService {
         return ContentBlockMapper.toContentBlockResponse(contentBlock);
     }
 
+    @Transactional
+    public ContentBlockResponse updateContentBlock(Long blockId, ContentBlockUpdateRequest updateRequest, AccountPrincipal principal) {
+        requireAdmin(principal);
+        ContentBlock contentBlock = contentBlockRepository.findById(blockId).orElseThrow(ContentBlockNotFound::new);
+        ContentBlockMapper.updateBlockFromRequest(contentBlock, updateRequest);
+        return ContentBlockMapper.toContentBlockResponse(contentBlock);
+    }
+
     @Transactional public void removeContentBlock(Long blockId, AccountPrincipal principal){
         requireAdmin(principal);
         ContentBlock contentBlock = contentBlockRepository.findById(blockId).orElseThrow(ContentBlockNotFound::new);

@@ -75,6 +75,13 @@ public class LessonController {
         courseService.removeContentBlock(blockId, principal);
         return ResponseEntity.noContent().build();
     }
+
+    @PatchMapping("/api/contentblocks/{blockId}")
+    public ResponseEntity<ContentBlockResponse> updateContentBlock(@PathVariable Long blockId, @RequestBody ContentBlockUpdateRequest updateRequest, @AuthenticationPrincipal AccountPrincipal principal) {
+        ContentBlockResponse response = courseService.updateContentBlock(blockId, updateRequest, principal);
+        return ResponseEntity.ok(response);
+    }
+
 //    @GetMapping("/api/courses/{courseId}/lessons")
 //    public ResponseEntity<List<LessonMetadataResponse>> getLessonsByCourseId(@PathVariable Long courseId){
 //        List<LessonMetadataResponse> lessons = courseService.getLessonsMetadataById(courseId);

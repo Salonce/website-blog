@@ -8,6 +8,7 @@ import salonce.dev.todolist.account.application.AccountService;
 import salonce.dev.todolist.account.infrastructure.security.AccountPrincipal;
 import salonce.dev.todolist.account.presentation.dtos.AccountResponse;
 import salonce.dev.todolist.account.presentation.dtos.PatchProfileRequest;
+import salonce.dev.todolist.account.presentation.dtos.UserResponse;
 
 @RequiredArgsConstructor
 @RestController

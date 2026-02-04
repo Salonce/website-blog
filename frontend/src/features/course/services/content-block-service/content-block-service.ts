@@ -6,6 +6,7 @@ import { catchError } from 'rxjs/internal/operators/catchError';
 import { throwError } from 'rxjs/internal/observable/throwError';
 import { ContentBlockResponse } from '../../dtos/content-block-response';
 import { ContentBlockCreateRequest } from '../../dtos/content-block-create-request';
+import { ContentBlockUpdateRequest } from '../../dtos/content-block-update-request';
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +23,16 @@ export class ContentBlockService {
       catchError(err => {
         console.error('Failed to create content block', err);
         return throwError(() => new Error('Could not create content block'));
+      })
+    );
+  }
+
+  updateContentBlock(blockId: number, contentBlock: ContentBlockUpdateRequest): Observable<ContentBlockResponse> {
+    return this.http.patch<ContentBlockResponse>(`${this.apiUrl}/contentblocks/${blockId}`, contentBlock, { withCredentials: true }
+    ).pipe(
+      catchError(err => {
+        console.error('Failed to update content block', err);
+        return throwError(() => new Error('Could not update content block'));
       })
     );
   }

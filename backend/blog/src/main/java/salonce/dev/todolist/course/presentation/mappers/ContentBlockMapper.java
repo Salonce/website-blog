@@ -4,6 +4,7 @@ import salonce.dev.todolist.course.domain.ContentBlock;
 import salonce.dev.todolist.course.domain.TextBlock;
 import salonce.dev.todolist.course.presentation.dtos.ContentBlockCreateRequest;
 import salonce.dev.todolist.course.presentation.dtos.ContentBlockResponse;
+import salonce.dev.todolist.course.presentation.dtos.ContentBlockUpdateRequest;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -59,5 +60,37 @@ public class ContentBlockMapper {
 
             default -> throw new IllegalArgumentException("Unknown block type: " + request.type());
         };
+    }
+
+    public static void updateBlockFromRequest(ContentBlock block, ContentBlockUpdateRequest request) {
+        String type = request.type();
+        Map<String, Object> data = request.data();
+
+        // Validate type matches
+        if (!block.type().equals(type)) {
+            throw new IllegalArgumentException(
+                    "Cannot change block type from " + block.type() + " to " + type
+            );
+        }
+
+        switch (type) {
+            case "TEXT" -> {
+                if (!(block instanceof TextBlock textBlock)) {
+                    throw new IllegalArgumentException("Block is not a TextBlock");
+                }
+                String content = (String) data.get("content");
+                if (content == null || content.isBlank()) {
+                    throw new IllegalArgumentException("Content is required for TEXT block");
+                }
+                textBlock.setContent(content);
+            }
+            // Future block types:
+            // case "IMAGE" -> {
+            //     ImageBlock imageBlock = (ImageBlock) block;
+            //     imageBlock.setUrl((String) data.get("url"));
+            //     imageBlock.setAlt((String) data.get("alt"));
+            // }
+            default -> throw new IllegalArgumentException("Unknown block type: " + type);
+        }
     }
 }

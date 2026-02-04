@@ -49,7 +49,7 @@ public class AccountService {
 
     @Transactional
     public UserResponse removeRole(AccountPrincipal principal, Long id, Role role){
-        requireAdmin(principal);
+        requireAdmin(principal);g
         Account account = accountRepository.findById(id).orElseThrow(AccountNotFound::new);
         account.removeRole(role);
         return AccountMapper.toUserResponse(account);

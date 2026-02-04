@@ -26,23 +26,19 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllUsers(principal));
     }
 
-    @GetMapping("/api/user/{id}")
+    @GetMapping("/api/users/{id}")
     public ResponseEntity<UserResponse> getUser(@AuthenticationPrincipal AccountPrincipal principal, @PathVariable Long id){
         return ResponseEntity.ok(userService.getUser(principal, id));
     }
 
-    @PostMapping("/{id}/roles/{role}")
+    @PostMapping("/api/users/{id}/roles/{role}")
     public ResponseEntity<UserResponse> addRole(@AuthenticationPrincipal AccountPrincipal principal, @PathVariable Long id,@PathVariable Role role) {
         return ResponseEntity.ok(accountService.addRole(principal, id, role));
     }
 
     // Remove a single role
-    @DeleteMapping("/{id}/roles/{role}")
-    public ResponseEntity<UserResponse> removeRole(
-            @AuthenticationPrincipal AccountPrincipal principal,
-            @PathVariable Long id,
-            @PathVariable Role role) {
-
+    @DeleteMapping("/api/users/{id}/roles/{role}")
+    public ResponseEntity<UserResponse> removeRole(@AuthenticationPrincipal AccountPrincipal principal, @PathVariable Long id, @PathVariable Role role) {
         return ResponseEntity.ok(accountService.removeRole(principal, id, role));
     }
 }

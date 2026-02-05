@@ -2,8 +2,9 @@ package salonce.dev.todolist.account.domain;
 
 public enum Role {
     ADMIN("ADMIN"),
-    USER("USER"),
-    MODERATOR("MODERATOR");
+    MODERATOR("MODERATOR"),
+    EDITOR("EDITOR"),
+    USER("USER");
 
     private final String name;
 

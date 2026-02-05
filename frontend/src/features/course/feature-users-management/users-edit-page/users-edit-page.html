@@ -1,1 +1,116 @@
-<p>users-edit-page works!</p>
+<div class="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900">User Management</h1>
+      <p class="mt-2 text-gray-600">Manage users and their role assignments</p>
+    </div>
+
+    <!-- Error Alert -->
+    @if (error) {
+      <div class="mb-6 bg-red-50 border border-red-200 rounded-lg p-4 flex items-start justify-between">
+        <div class="flex items-start">
+          <svg class="w-5 h-5 text-red-500 mt-0.5 mr-3" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+          </svg>
+          <p class="text-sm text-red-700">{{ error }}</p>
+        </div>
+        <button (click)="loadUsers()" class="text-red-500 hover:text-red-700">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+          </svg>
+        </button>
+      </div>
+    }
+
+    <!-- Users Table -->
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+      @if (isLoading) {
+        <div class="flex items-center justify-center py-12">
+          <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        </div>
+      } @else if (users.length === 0) {
+        <div class="text-center py-12">
+          <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+          </svg>
+          <h3 class="mt-2 text-sm font-medium text-gray-900">No users</h3>
+          <p class="mt-1 text-sm text-gray-500">No users found in the system.</p>
+        </div>
+      } @else {
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  ID
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Name
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Email
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Current Roles
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Manage Roles
+                </th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              @for (user of users; track user.id) {
+                <tr class="hover:bg-gray-50 transition-colors duration-150">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {{ user.id }}
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    {{ user.name }}
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                    {{ user.email }}
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="flex flex-wrap gap-2">
+                      @for (role of user.roles; track role) {
+                        <span [class]="getRoleBadgeClass(role)">
+                          {{ role }}
+                        </span>
+                      }
+                      @if (user.roles.length === 0) {
+                        <span class="text-sm text-gray-400 italic">No roles assigned</span>
+                      }
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="flex flex-wrap gap-2">
+                      @for (role of availableRoles; track role) {
+                        <button
+                          (click)="toggleRole(user, role)"
+                          [class]="hasRole(user, role) ? getActiveRoleButtonClass(role) : getInactiveRoleButtonClass(role)"
+                          [title]="hasRole(user, role) ? 'Remove ' + role : 'Add ' + role">
+                          {{ role }}
+                          <span class="ml-1 font-bold">
+                            {{ hasRole(user, role) ? '✓' : '+' }}
+                          </span>
+                        </button>
+                      }
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+
+    <!-- User Count -->
+    @if (!isLoading && users.length > 0) {
+      <div class="mt-4 text-sm text-gray-600">
+        Total users: {{ users.length }}
+      </div>
+    }
+  </div>
+</div>

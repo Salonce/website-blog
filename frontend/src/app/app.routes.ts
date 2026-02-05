@@ -13,6 +13,7 @@ import { CourseLessonsManagementPage } from '../features/course/feature-course-m
 import { ArticlesPage } from '../features/article/feature-article-reader/articles-page/articles-page';
 import { LessonEditPage } from '../features/course/feature-course-management/lesson-edit-page/lesson-edit-page';
 import { LessonReadPage } from '../features/course/feature-course-management/lesson-read-page/lesson-read-page';
+import { UsersEditPage } from '../features/course/feature-users-management/users-edit-page/users-edit-page';
 
 export const routes: Routes = [
     {
@@ -43,7 +44,8 @@ export const routes: Routes = [
             { path: 'articles/:id/edit', component: ArticleEditPage },
             { path: 'courses-management', component: CoursesManagementPage },
             { path: 'courses/:id/lessons', component: CourseLessonsManagementPage },
-            { path: 'courses/:courseId/lessons/:lessonId', component: LessonEditPage } 
+            { path: 'courses/:courseId/lessons/:lessonId', component: LessonEditPage },
+            { path: 'users', component: UsersEditPage } 
         ]
     }
 ];

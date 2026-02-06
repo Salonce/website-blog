@@ -1,7 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { LessonService } from '../../../services/lesson-service/lesson-service';
-import { LessonMetadata } from '../../../models/lesson-metadata';
+import { LessonMetadataResponse } from '../../../dtos/lesson-metadata-response';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -13,7 +13,7 @@ import { CommonModule } from '@angular/common';
 export class NavbarLessons implements OnInit {
   // Reactive state
   courseSlug = signal<string | null>(null);
-  lessons = signal<LessonMetadata[]>([]);
+  lessons = signal<LessonMetadataResponse[]>([]);
 
   constructor(
     private route: ActivatedRoute,
@@ -27,13 +27,13 @@ export class NavbarLessons implements OnInit {
     console.log('All route params:', params);
     console.log('Keys:', params.keys);
     
-    const slug = params.get('courseSlug'); // Try 'courseSlug' (camelCase)
+    const slug = params.get('courseSlug'); 
     console.log('Course slug:', slug);
     
     if (slug) {
       this.courseSlug.set(slug);
 
-      this.lessonService.getLessonsMetadataForCourse(slug).subscribe(lessons => {
+      this.lessonService.getLessonsMetadataForCourseBySlug(slug).subscribe(lessons => {
         console.log('Lessons received:', lessons);
         this.lessons.set(lessons);
       });

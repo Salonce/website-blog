@@ -12,7 +12,8 @@
       </h1>
 
       <!-- QUILL CONTENT - Remove conflicting classes -->
-      <div class="prose prose-lg max-w-none" [innerHTML]="getSafeHtml(article.content)">
+      <div class="prose prose-lg max-w-none whitespace-pre-wrap" 
+          [innerHTML]="getSafeHtml(article.content)">
       </div>
 
     </article>

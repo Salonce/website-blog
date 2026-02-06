@@ -28,7 +28,12 @@ public class CourseController {
 
     @GetMapping("/api/courses/{id}")
     public ResponseEntity<CourseResponse> getCourseById(@PathVariable Long id){
-        return ResponseEntity.ok(courseService.getCourseViewById(id));
+        return ResponseEntity.ok(courseService.getCourseResponseById(id));
+    }
+
+    @PatchMapping("/api/courses/{id}")
+    public ResponseEntity<CourseResponse> updateCourse(@AuthenticationPrincipal AccountPrincipal principal, @PathVariable Long id, @RequestBody CourseUpdateRequest courseUpdateRequest){
+        return ResponseEntity.ok(courseService.updateCourse(principal, id, courseUpdateRequest));
     }
 
     @DeleteMapping("/api/courses/{id}")

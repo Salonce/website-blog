@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../../app/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
-import { CourseMetadata } from '../../models/course-metadata';
-import { NewCourse } from '../../models/new-course';
-import { Course } from '../../models/course';
+import { CourseMetadataResponse } from '../../dtos/course-metadata-response';
+import { CourseCreateRequest } from '../../dtos/course-create-request';
+import { CourseResponse } from '../../dtos/course-response';
+import { CourseUpdateRequest } from '../../dtos/course-update-request';
 
 @Injectable({
   providedIn: 'root'
@@ -14,38 +15,47 @@ export class CourseService {
 
   private readonly apiUrl = environment.apiUrl;
 
-  getCoursesMetadata(): Observable<CourseMetadata[]>{
-    return this.http.get<CourseMetadata[]>(`${this.apiUrl}/courses`, {
+  getCoursesMetadata(): Observable<CourseMetadataResponse[]>{
+    return this.http.get<CourseMetadataResponse[]>(`${this.apiUrl}/courses`, {
       withCredentials: true
     }).pipe(
       catchError(err => {
-        console.error('Failed to fetch courses', err);
-        return throwError(() => new Error('Could not fetch courses'));
+        console.error('Failed to get courses', err);
+        return throwError(() => new Error('Could not get courses'));
       })
     );
   }
 
-  getCourseById(id: number): Observable<Course>{
-    return this.http.get<Course>(`${this.apiUrl}/courses/${id}`, {
+  getCourseById(id: number): Observable<CourseResponse>{
+    return this.http.get<CourseResponse>(`${this.apiUrl}/courses/${id}`, {
       withCredentials: true
     }).pipe(
       catchError(err => {
-        console.error('Failed to fetch courses', err);
-        return throwError(() => new Error('Could not fetch courses'));
+        console.error('Failed to get course', err);
+        return throwError(() => new Error('Could not get courses'));
       })
     );
   }
 
+  updateCourse(id: number, CourseUpdateRequest: CourseUpdateRequest) : Observable<CourseResponse> {
+    return this.http.patch<CourseResponse>(`${this.apiUrl}/courses/${id}`, CourseUpdateRequest, {withCredentials : true}).pipe(
+      catchError(err => {
+        console.error('Failed to update course', err);
+        return throwError(() => new Error('Could not update course'));
+      })
+    );
+  }
 
-
-  postCourse(course: NewCourse) : Observable<NewCourse> {
-    return this.http.post<NewCourse>(`${this.apiUrl}/courses`, course, {withCredentials : true}).pipe(
+  postCourse(CourseCreateRequest: CourseCreateRequest) : Observable<CourseResponse> {
+    return this.http.post<CourseResponse>(`${this.apiUrl}/courses`, CourseCreateRequest, {withCredentials : true}).pipe(
       catchError(err => {
         console.error('Failed to post course', err);
-        return throwError(() => new Error('Could not fetch course'));
+        return throwError(() => new Error('Could not post course'));
       })
     );
   }
+
+  
 
   // getCourseBySlug(slug : string) : Observable<Course> {
   // }

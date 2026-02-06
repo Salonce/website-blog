@@ -8,7 +8,7 @@
   },
   "include": [
     "src/**/*.ts"
-  ],
+, "src/features/course/dtos/content-block-create-request.ts"  ],
   "exclude": [
     "src/**/*.spec.ts"
   ]

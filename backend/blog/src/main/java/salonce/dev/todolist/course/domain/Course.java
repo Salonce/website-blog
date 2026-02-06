@@ -14,7 +14,10 @@ public class Course {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
     private String name;
+
+    @Setter
     private String slug;
     private Integer orderId;
     private Boolean published;

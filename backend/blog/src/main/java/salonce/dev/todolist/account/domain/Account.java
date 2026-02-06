@@ -12,10 +12,10 @@ import java.util.Set;
 @Getter
 public class Account {
 
-    public Account (String email, String name, String subject, String provider){
+    public Account(String email, String name, String subject, String provider) {
         this.email = email;
         this.name = name;
-        this.addUserRole();
+        this.roles.addRole(Role.USER);  // Default role
         identities.addIdentity(provider, subject);
     }
 
@@ -29,7 +29,6 @@ public class Account {
     @Setter
     private String email;
 
-    @Setter
     @Embedded
     private Roles roles = new Roles();
 
@@ -37,47 +36,27 @@ public class Account {
     @Embedded
     private Identities identities = new Identities();
 
-    public Boolean identityExists(String provider, String subject){
-        return identities.identityExists(provider, subject);
+    public void addRole(Role role) {
+        roles.addRole(role);
     }
 
-    public Set<String> getRoles(){
+    public void removeRole(Role role) {
+        roles.removeRole(role);
+    }
+
+    public boolean hasRole(Role role) {
+        return roles.hasRole(role);
+    }
+
+    public Set<Role> getRoles() {
+        return roles.getValues();
+    }
+
+    public Set<String> getRoleNames() {
         return roles.getNames();
     }
 
-    public void addAdminRole() {
-        roles.addAdminRole();
-    }
-
-    public void addUserRole() {
-        roles.addUserRole();
-    }
-
-    public Boolean isAdmin() {
-        return roles.isAdmin();
-    }
-
-    public Boolean isUser() {
-        return roles.isUser();
-    }
-
-    public Boolean isModerator() {
-        return roles.isModerator();
-    }
-
-    public void addModeratorRole() {
-        roles.addModeratorRole();
-    }
-
-    public void removeAdminRole() {
-        roles.removeAdminRole();
-    }
-
-    public void removeUserRole() {
-        roles.removeUserRole();
-    }
-
-    public void removeModeratorRole() {
-        roles.removeModeratorRole();
+    public boolean identityExists(String provider, String subject) {
+        return identities.identityExists(provider, subject);
     }
 }

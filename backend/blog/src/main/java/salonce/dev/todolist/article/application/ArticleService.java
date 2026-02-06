@@ -8,6 +8,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import salonce.dev.todolist.account.application.AccountService;
 import salonce.dev.todolist.account.domain.Account;
+import salonce.dev.todolist.account.domain.Role;
 import salonce.dev.todolist.account.infrastructure.security.AccountPrincipal;
 import salonce.dev.todolist.article.application.exceptions.ArticleNotFound;
 import salonce.dev.todolist.article.domain.Article;
@@ -44,15 +45,14 @@ public class ArticleService {
     @Transactional
     public ArticleViewResponse saveArticle(AccountPrincipal principal, ArticleCreateRequest articleCreateRequest){
         Account account = accountService.findAccount(principal.id());
-        if (!account.isAdmin()) throw new AccessDeniedException("Access forbidden.");
+        accountService.requireAdminOrEditor(principal);
         Article article = new Article(articleCreateRequest.title(), generateSlug(articleCreateRequest.title()), articleCreateRequest.content(), account);
         return ArticleMapper.toArticleResponse(articleRepository.save(article));
     }
 
     @Transactional
     public ArticleViewResponse patchArticle(AccountPrincipal principal, ArticleCreateRequest articleCreateRequest, Long articleId){
-        Account account = accountService.findAccount(principal.id());
-        if (!account.isAdmin()) throw new AccessDeniedException("Access forbidden.");
+        accountService.requireAdminOrEditor(principal);
         Article article = articleRepository.findById(articleId).orElseThrow(ArticleNotFound::new);
 
         if (articleCreateRequest.title() != null) article.setTitle(articleCreateRequest.title());
@@ -63,8 +63,7 @@ public class ArticleService {
 
     @Transactional
     public void deleteArticle(AccountPrincipal principal, Long articleId){
-        Account account = accountService.findAccount(principal.id());
-        if (!account.isAdmin()) throw new AccessDeniedException("Access forbidden.");
+        accountService.requireAdminOrEditor(principal);
         Article article = articleRepository.findById(articleId).orElseThrow(ArticleNotFound::new);
         articleRepository.delete(article);
     }

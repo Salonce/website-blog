@@ -70,20 +70,7 @@
               required
             />
           </div>
-          <div>
-            <label for="lessonContent" class="block text-sm font-medium text-gray-700 mb-2">
-              Content (Optional)
-            </label>
-            <textarea
-              id="lessonContent"
-              [(ngModel)]="newLessonContent"
-              name="lessonContent"
-              [disabled]="isSubmitting()"
-              placeholder="Enter lesson content"
-              rows="4"
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
-            ></textarea>
-          </div>
+
           <div class="flex gap-3">
             <button
               type="submit"
@@ -104,83 +91,167 @@
     }
 
     <!-- Lessons Table -->
-<div class="bg-white rounded-lg shadow-md overflow-hidden">
-  @if (isLoading()) {
-    <div class="flex items-center justify-center py-12">
-      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+      @if (isLoading()) {
+        <div class="flex items-center justify-center py-12">
+          <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        </div>
+      } @else if (lessons().length === 0) {
+        <div class="text-center py-12">
+          <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+          </svg>
+          <h3 class="mt-2 text-sm font-medium text-gray-900">No lessons</h3>
+          <p class="mt-1 text-sm text-gray-500">Get started by adding a new lesson.</p>
+        </div>
+      } @else {
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  ID
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Title
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Slug
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Order ID
+                </th>
+                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+
+            <tbody class="bg-white divide-y divide-gray-200">
+              @for (lesson of lessons(); track lesson.id) {
+                <tr class="hover:bg-gray-50 transition-colors duration-150">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {{ lesson.id }}
+                  </td>
+
+                  <!-- Title Column - Editable -->
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    @if (isEditingLessonField(lesson.id, 'title')) {
+                      <!-- Edit Mode -->
+                      <div class="flex items-center gap-2">
+                        <input
+                          type="text"
+                          [(ngModel)]="editingLessonValue"
+                          (keydown)="onEditKeyPress($event, lesson.id)"
+                          class="px-2 py-1 border border-blue-500 rounded focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                          placeholder="Lesson title"
+                          autofocus
+                        />
+                        <button
+                          (click)="saveEditLesson(lesson.id)"
+                          class="text-green-600 hover:text-green-800 p-1"
+                          title="Save">
+                          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                          </svg>
+                        </button>
+                        <button
+                          (click)="cancelEditLesson()"
+                          class="text-red-600 hover:text-red-800 p-1"
+                          title="Cancel">
+                          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                          </svg>
+                        </button>
+                      </div>
+                    } @else {
+                      <!-- View Mode -->
+                      <div class="flex items-center gap-2 group">
+                        <span>{{ lesson.title }}</span>
+                        <button
+                          (click)="startEditLesson(lesson, 'title')"
+                          class="opacity-0 group-hover:opacity-100 text-blue-600 hover:text-blue-800 p-1 transition-opacity"
+                          title="Edit title">
+                          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                          </svg>
+                        </button>
+                      </div>
+                    }
+                  </td>
+
+                  <!-- Slug Column - Editable with Warning -->
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                    @if (isEditingLessonField(lesson.id, 'slug')) {
+                      <!-- Edit Mode -->
+                      <div class="flex items-center gap-2">
+                        <input
+                          type="text"
+                          [(ngModel)]="editingLessonValue"
+                          (keydown)="onEditKeyPress($event, lesson.id)"
+                          class="px-2 py-1 border border-yellow-500 rounded focus:ring-2 focus:ring-yellow-500 focus:outline-none"
+                          placeholder="lesson-slug"
+                          autofocus
+                        />
+                        <button
+                          (click)="saveEditLesson(lesson.id)"
+                          class="text-green-600 hover:text-green-800 p-1"
+                          title="Save (will show warning)">
+                          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                          </svg>
+                        </button>
+                        <button
+                          (click)="cancelEditLesson()"
+                          class="text-red-600 hover:text-red-800 p-1"
+                          title="Cancel">
+                          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                          </svg>
+                        </button>
+                      </div>
+                    } @else {
+                      <!-- View Mode with Warning Icon -->
+                      <div class="flex items-center gap-2 group">
+                        <span class="font-mono">{{ lesson.slug }}</span>
+                        <button
+                          (click)="startEditLesson(lesson, 'slug')"
+                          class="opacity-0 group-hover:opacity-100 text-yellow-600 hover:text-yellow-800 p-1 transition-opacity"
+                          title="Edit slug (⚠️ changes URL)">
+                          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                          </svg>
+                        </button>
+                      </div>
+                    }
+                  </td>
+
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                    {{ lesson.orderId }}
+                  </td>
+
+                  <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <div class="flex justify-end gap-3">
+                      <button
+                        (click)="editLesson(lesson.id)"
+                        class="text-blue-600 hover:text-blue-900 transition-colors duration-200">
+                        Edit Content
+                      </button>
+                      <button
+                        (click)="deleteLesson(lesson.id, lesson.title)"
+                        class="text-red-600 hover:text-red-900 transition-colors duration-200">
+                        Delete
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
     </div>
-  } @else if (lessons().length === 0) {
-    <div class="text-center py-12">
-      <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
-      </svg>
-      <h3 class="mt-2 text-sm font-medium text-gray-900">No lessons</h3>
-      <p class="mt-1 text-sm text-gray-500">Get started by adding a new lesson.</p>
-    </div>
-  } @else {
-    <div class="overflow-x-auto">
-      <table class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-50">
-          <tr>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              ID
-            </th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Title
-            </th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Slug
-            </th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Order ID
-            </th>
-            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Actions
-            </th>
-          </tr>
-        </thead>
-
-        <tbody class="bg-white divide-y divide-gray-200">
-          @for (lesson of lessons(); track lesson.id) {
-            <tr class="hover:bg-gray-50 transition-colors duration-150">
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                {{ lesson.id }}
-              </td>
-
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                {{ lesson.title }}
-              </td>
-
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                {{ lesson.slug }}
-              </td>
-
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                {{ lesson.orderId }}
-              </td>
-
-              <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                <div class="flex justify-end gap-3">
-                  <button
-                    (click)="editLesson(lesson.id)"
-                    class="text-blue-600 hover:text-blue-900 transition-colors duration-200">
-                    Edit
-                  </button>
-                  <button
-                    (click)="deleteLesson(lesson.id, lesson.title)"
-                    class="text-red-600 hover:text-red-900 transition-colors duration-200">
-                    Delete
-                  </button>
-                </div>
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    </div>
-  }
-</div>
 
     <!-- Lesson Count -->
     @if (!isLoading() && lessons().length > 0) {

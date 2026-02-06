@@ -13,7 +13,7 @@
       <!-- Desktop Links -->
       <div class="hidden md:flex items-center space-x-4">
         @if (principal$ | async; as principal) {
-          @if (principal.roles.includes('ADMIN')) {
+          @if (principal.roles.includes('ADMIN') || principal.roles.includes('MODERATOR') || principal.roles.includes('EDITOR')) {
             <a [routerLink]="['/dashboard']"
                class="px-3 py-2 rounded-md text-gray-800 hover:bg-amber-100 hover:text-amber-600 transition cursor-pointer">
               Dashboard

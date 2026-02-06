@@ -9,7 +9,7 @@
         <div class="flex items-center justify-between">
           <div>
             <h1 class="text-3xl font-bold text-gray-900">{{ lesson()!.title }}</h1>
-            <p class="mt-2 text-gray-600">Slug: {{ lesson()!.slug }} | Order: {{ lesson()!.orderId }}</p>
+            <p class="mt-2 text-gray-600">Slug: {{ lesson()!.slug }} | Order: {{ lesson()!.position }}</p>
           </div>
           <button
             (click)="backToLessons()"

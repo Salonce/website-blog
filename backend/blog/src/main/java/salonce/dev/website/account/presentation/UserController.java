@@ -1,0 +1,42 @@
+package salonce.dev.website.account.presentation;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
+import salonce.dev.website.account.application.AccountService;
+import salonce.dev.website.account.application.UserService;
+import salonce.dev.website.account.domain.Role;
+import salonce.dev.website.account.infrastructure.security.AccountPrincipal;
+import salonce.dev.website.account.presentation.dtos.UserResponse;
+
+import java.util.List;
+
+@RequiredArgsConstructor
+@RestController
+public class UserController {
+
+    private final UserService userService;
+    private final AccountService accountService;
+
+    @GetMapping("/api/users")
+    public ResponseEntity<List<UserResponse>> getUsers(@AuthenticationPrincipal AccountPrincipal principal){
+        return ResponseEntity.ok(userService.getAllUsers(principal));
+    }
+
+    @GetMapping("/api/users/{id}")
+    public ResponseEntity<UserResponse> getUser(@AuthenticationPrincipal AccountPrincipal principal, @PathVariable Long id){
+        return ResponseEntity.ok(userService.getUser(principal, id));
+    }
+
+    @PostMapping("/api/users/{id}/roles/{role}")
+    public ResponseEntity<UserResponse> addRole(@AuthenticationPrincipal AccountPrincipal principal, @PathVariable Long id,@PathVariable Role role) {
+        return ResponseEntity.ok(accountService.addRole(principal, id, role));
+    }
+
+    // Remove a single role
+    @DeleteMapping("/api/users/{id}/roles/{role}")
+    public ResponseEntity<UserResponse> removeRole(@AuthenticationPrincipal AccountPrincipal principal, @PathVariable Long id, @PathVariable Role role) {
+        return ResponseEntity.ok(accountService.removeRole(principal, id, role));
+    }
+}

@@ -4,6 +4,6 @@ export interface Course{
   id : number;
   name : string;
   slug : string;
-  orderId : string;
+  position : number;
   lessons: Lesson[];
 }

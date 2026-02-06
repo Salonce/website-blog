@@ -96,7 +96,6 @@ public class CourseService {
 
     @Transactional
     public LessonResponse getLessonBySlugs(AccountPrincipal principal, String courseSlug, String lessonSlug){
-        accountService.requireAdminOrEditor(principal);
         Lesson lesson = lessonRepository.findByCourseSlugAndLessonSlug(courseSlug, lessonSlug).orElseThrow(LessonNotFound::new);
         return LessonMapper.toLessonResponse(lesson);
     }

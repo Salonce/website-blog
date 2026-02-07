@@ -83,16 +83,31 @@ public class CourseService {
     }
 
     @Transactional
-    public void reorderCourses(List<Long> orderedCourseIds) {
+    public void reorderCourses(AccountPrincipal principal, ReorderRequest request) {
+        accountService.requireAdminOrEditor(principal);
+        List<Long> orderedCourseIds = request.ids();
         for (int i = 0; i < orderedCourseIds.size(); i++) {
             Long courseId = orderedCourseIds.get(i);
-            Course course = getCourseById(courseId);
+            Course course = courseRepository.findById(courseId).orElseThrow(CourseNotFound::new);
             course.setPosition(i + 1);
             courseRepository.save(course);
         }
     }
 
     // LESSONS
+
+    @Transactional
+    public void reorderLessons(AccountPrincipal principal, ReorderRequest request) {
+        accountService.requireAdminOrEditor(principal);
+        List<Long> orderedLessonIds = request.ids();
+        for (int i = 0; i < orderedLessonIds.size(); i++) {
+            Long lessonId = orderedLessonIds.get(i);
+            Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(LessonNotFound::new);
+            lesson.setPosition(i + 1);
+            lessonRepository.save(lesson);
+        }
+    }
+
 
     @Transactional
     public LessonResponse getLessonById(AccountPrincipal principal, Long lessonId){
@@ -127,7 +142,7 @@ public class CourseService {
     public LessonMetadataResponse saveLesson(AccountPrincipal principal, Long courseId, LessonCreateRequest lessonCreateRequest){
         accountService.requireAdminOrEditor(principal);
         int nextOrderIndex = lessonRepository.findMaxOrderIndex(courseId) + 1;
-        Course course = getCourseById(courseId);
+        Course course = courseRepository.findById(courseId).orElseThrow(CourseNotFound::new);
         Lesson lesson = new Lesson(lessonCreateRequest.title(), generateSlug(lessonCreateRequest.title()), nextOrderIndex);
         course.addLesson(lesson);
         courseRepository.save(course);

@@ -56,6 +56,12 @@ public class LessonController {
         return ResponseEntity.noContent().build();
     }
 
+    @PutMapping("api/lessons/positions")
+    public ResponseEntity<Void> reorderLessons(@AuthenticationPrincipal AccountPrincipal principal, @RequestBody ReorderRequest reorderRequest) {
+        courseService.reorderLessons(principal, reorderRequest);
+        return ResponseEntity.ok().build();
+    }
+
     // Blocks
 
     @GetMapping("/api/lessons/{lessonId}/contentblocks")

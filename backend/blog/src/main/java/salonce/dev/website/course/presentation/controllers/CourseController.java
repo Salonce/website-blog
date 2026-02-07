@@ -48,8 +48,8 @@ public class CourseController {
     }
 
     @PutMapping("api/courses/positions")
-    public ResponseEntity<Void> reorderCourses(@RequestBody ReorderRequest request) {
-        courseService.reorderCourses(request.ids());
+    public ResponseEntity<Void> reorderCourses(@AuthenticationPrincipal AccountPrincipal principal, @RequestBody ReorderRequest request) {
+        courseService.reorderCourses(principal, request);
         return ResponseEntity.ok().build();
     }
 }

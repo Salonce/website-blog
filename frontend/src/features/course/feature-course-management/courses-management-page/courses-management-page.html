@@ -155,12 +155,13 @@
               @for (course of courses(); track course.id) {
                 <tr 
                   cdkDrag
-                  class="hover:bg-gray-50 transition-colors duration-150 group"
-                  [class.cursor-move]="!isEditingCourseField(course.id, 'name') && !isEditingCourseField(course.id, 'slug')">
+                  class="hover:bg-gray-50 transition-colors duration-150 group">
                   
-                  <!-- Drag Handle -->
+                  <!-- Drag Handle - ONLY THIS IS DRAGGABLE -->
                   <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="text-gray-400 group-hover:text-gray-600 cursor-grab active:cursor-grabbing">
+                    <div 
+                      cdkDragHandle
+                      class="text-gray-400 hover:text-gray-600 cursor-grab active:cursor-grabbing p-2 -m-2 rounded hover:bg-gray-100 transition-colors">
                       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"/>
                       </svg>

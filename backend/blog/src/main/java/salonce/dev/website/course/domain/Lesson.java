@@ -21,7 +21,8 @@ public class Lesson {
     @Setter
     private String slug;
 
-    private int position;
+    @Setter
+    private Integer position;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")

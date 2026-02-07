@@ -4,6 +4,6 @@ export interface Lesson{
     id : number;
     title : string;
     slug: string;
-    orderId: number;
+    position: number;
     contentBlocks: ContentBlock[];
 }

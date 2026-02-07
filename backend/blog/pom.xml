@@ -9,10 +9,10 @@
 		<relativePath/>
 	</parent>
 	<groupId>salonce.dev</groupId>
-	<artifactId>blog</artifactId>
+	<artifactId>website</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>blog</name>
-	<description>blog</description>
+	<name>website</name>
+	<description>website</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -112,7 +112,7 @@
                     </execution>
                 </executions>
 				<configuration>
-                    <mainClass>salonce.dev.todolist.Application</mainClass>
+                    <mainClass>salonce.dev.website.Application</mainClass>
                     <layout>JAR</layout>
 					<excludes>
 						<exclude>

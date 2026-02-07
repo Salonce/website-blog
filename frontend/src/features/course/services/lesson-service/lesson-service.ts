@@ -11,6 +11,7 @@ import { LessonResponse } from '../../dtos/lesson-response';
 import { map, retry } from 'rxjs';
 import { LessonMapper } from '../../lesson-mapper';
 import { LessonUpdateRequest } from '../../dtos/lesson-update-request';
+import { ReorderRequest } from '../../dtos/reorder-request';
 
 @Injectable({
   providedIn: 'root'
@@ -92,6 +93,11 @@ export class LessonService {
         return throwError(() => new Error('Could not get lessons'));
       })
     );
+  }
+
+  reorderLessons(ids: number[]): Observable<void> {
+    const request: ReorderRequest = { ids };
+    return this.http.put<void>(`${this.apiUrl}/lessons/positions`, request);
   }
   
 }

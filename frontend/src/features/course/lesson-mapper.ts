@@ -10,7 +10,7 @@ export class LessonMapper {
       id: dto.id,
       title: dto.title,
       slug: dto.slug,
-      orderId: dto.orderId,
+      position: dto.position,
       contentBlocks: dto.contentBlocks.map(block => 
         this.mapContentBlock(block)
       )

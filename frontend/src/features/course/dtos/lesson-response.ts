@@ -4,6 +4,6 @@ export interface LessonResponse{
     id : number;
     title : string;
     slug: string;
-    orderId: number;
+    position : number;
     contentBlocks: ContentBlockResponse[];
 }

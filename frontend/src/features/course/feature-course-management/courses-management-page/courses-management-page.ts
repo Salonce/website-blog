@@ -1,7 +1,9 @@
+// courses-management-page.component.ts
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { CourseService } from '../../services/course-service/course-service';
 import { CourseMetadataResponse } from '../../dtos/course-metadata-response';
 import { CourseCreateRequest } from '../../dtos/course-create-request';
@@ -10,7 +12,7 @@ import { CourseUpdateRequest } from '../../dtos/course-update-request';
 @Component({
   selector: 'app-courses-management-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, DragDropModule],
   templateUrl: './courses-management-page.html',
   styleUrl: './courses-management-page.css'
 })
@@ -30,6 +32,10 @@ export class CoursesManagementPage implements OnInit {
   editingCourseName = signal('');
   editingField = signal<'name' | 'slug' | null>(null);
 
+  // Reordering
+  hasUnsavedOrder = signal(false);
+  isSavingOrder = signal(false);
+
   constructor(
     private courseService: CourseService,
     private router: Router
@@ -47,6 +53,7 @@ export class CoursesManagementPage implements OnInit {
       next: (data) => {
         this.courses.set(data);
         this.isLoading.set(false);
+        this.hasUnsavedOrder.set(false); // Reset after loading
       },
       error: (err) => {
         this.error.set('Failed to load courses');
@@ -95,13 +102,81 @@ export class CoursesManagementPage implements OnInit {
 
     this.courseService.deleteCourse(id).subscribe({
       next: () => {
-        this.courses.update(list => list.filter(c => c.id !== id));
+        this.loadCourses(); // Reload to update positions
       },
       error: (err) => {
         this.error.set('Failed to delete course');
         console.error(err);
       }
     });
+  }
+
+  /**
+   * Handle drag and drop reordering
+   */
+  onDropCourse(event: CdkDragDrop<CourseMetadataResponse[]>) {
+    if (event.previousIndex === event.currentIndex) {
+      return; // No change
+    }
+
+    // Update local array
+    const coursesList = [...this.courses()];
+    moveItemInArray(coursesList, event.previousIndex, event.currentIndex);
+    
+    // Update position numbers visually
+    coursesList.forEach((course, index) => {
+      course.position = index + 1;
+    });
+
+    this.courses.set(coursesList);
+    this.hasUnsavedOrder.set(true); // Mark as having unsaved changes
+  }
+
+  /**
+   * Save the new order to backend
+   */
+  saveOrder() {
+    if (!this.hasUnsavedOrder()) {
+      return;
+    }
+
+    this.isSavingOrder.set(true);
+    const orderedIds = this.courses().map(c => c.id);
+
+    this.courseService.reorderCourses(orderedIds).subscribe({
+      next: () => {
+        this.hasUnsavedOrder.set(false);
+        this.isSavingOrder.set(false);
+        this.error.set(null);
+        // Show success message briefly
+        this.showSuccessMessage();
+      },
+      error: (err) => {
+        this.error.set('Failed to save new order');
+        this.isSavingOrder.set(false);
+        console.error('Error saving order:', err);
+        // Reload to restore correct order from server
+        this.loadCourses();
+      }
+    });
+  }
+
+  /**
+   * Cancel reordering and reload original order
+   */
+  cancelReorder() {
+    if (!confirm('Discard changes to course order?')) {
+      return;
+    }
+    this.loadCourses();
+  }
+
+  /**
+   * Show temporary success message
+   */
+  private showSuccessMessage() {
+    // You could implement a toast/notification here
+    console.log('Order saved successfully');
   }
 
   /**

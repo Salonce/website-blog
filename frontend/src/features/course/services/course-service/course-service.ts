@@ -6,6 +6,7 @@ import { CourseMetadataResponse } from '../../dtos/course-metadata-response';
 import { CourseCreateRequest } from '../../dtos/course-create-request';
 import { CourseResponse } from '../../dtos/course-response';
 import { CourseUpdateRequest } from '../../dtos/course-update-request';
+import { ReorderRequest } from '../../dtos/reorder-request';
 
 @Injectable({
   providedIn: 'root'
@@ -53,6 +54,11 @@ export class CourseService {
         return throwError(() => new Error('Could not post course'));
       })
     );
+  }
+
+  reorderCourses(ids: number[]): Observable<void> {
+    const request: ReorderRequest = { ids };
+    return this.http.put<void>(`${this.apiUrl}/courses/positions`, request);
   }
 
   

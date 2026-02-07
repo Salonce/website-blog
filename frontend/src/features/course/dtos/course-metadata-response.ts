@@ -2,6 +2,6 @@ export interface CourseMetadataResponse{
   id : number;
   name : string;
   slug : string;
-  orderId : string;
+  position : number;
   size: number;
 }

@@ -54,4 +54,14 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
     @Modifying
     @Query("UPDATE Course c SET c.position = c.position - 1 WHERE c.position > :position")
     void decrementPositionsFrom(@Param("position") Integer position);
+
+    @Modifying
+    @Query("""
+        UPDATE Course c
+        SET c.position = c.position - 1
+        WHERE c.position > :deletedPosition
+    """)
+    void shiftPositionsAfterDeletion(
+            @Param("deletedPosition") int deletedPosition
+    );
 }

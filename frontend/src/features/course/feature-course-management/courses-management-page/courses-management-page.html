@@ -129,9 +129,6 @@
                   <!-- Drag handle -->
                 </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  ID
-                </th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Name
                 </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -166,10 +163,6 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"/>
                       </svg>
                     </div>
-                  </td>
-
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {{ course.id }}
                   </td>
                   
                   <!-- Name Column - Editable -->
@@ -276,12 +269,15 @@
                   </td>
 
                   <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <div class="flex justify-end gap-3">
+                    <div class="flex justify-end items-center gap-6">
                       <button
                         (click)="manageLessons(course.id)"
                         class="text-blue-600 hover:text-blue-900 transition-colors duration-200">
                         Lessons
                       </button>
+
+                      <span class="text-gray-300">|</span>
+
                       <button
                         (click)="deleteCourse(course.id, course.name)"
                         class="text-red-600 hover:text-red-900 transition-colors duration-200">
@@ -289,6 +285,7 @@
                       </button>
                     </div>
                   </td>
+
 
                   <!-- Drag Preview -->
                   <td *cdkDragPreview colspan="7" class="px-6 py-4 bg-white shadow-xl rounded-lg border-2 border-blue-500">

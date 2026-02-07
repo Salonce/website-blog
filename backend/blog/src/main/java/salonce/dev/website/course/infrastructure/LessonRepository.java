@@ -1,6 +1,7 @@
 package salonce.dev.website.course.infrastructure;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -46,5 +47,17 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
     Optional<Lesson> findByCourseSlugAndLessonSlug(
             @Param("courseSlug") String courseSlug,
             @Param("lessonSlug") String lessonSlug
+    );
+
+    @Modifying
+    @Query("""
+        UPDATE Lesson l
+        SET l.position = l.position - 1
+        WHERE l.course.id = :courseId
+          AND l.position > :deletedPosition
+    """)
+    void shiftPositionsAfterDeletion(
+            @Param("courseId") Long courseId,
+            @Param("deletedPosition") int deletedPosition
     );
 }

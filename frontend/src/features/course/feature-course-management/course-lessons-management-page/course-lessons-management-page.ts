@@ -1,3 +1,4 @@
+// course-lessons-management-page.component.ts
 import { Component, signal } from '@angular/core';
 import { LessonMetadataResponse } from '../../dtos/lesson-metadata-response';
 import { CourseResponse } from '../../dtos/course-response';
@@ -8,11 +9,12 @@ import { LessonCreateRequest } from '../../dtos/lesson-create-request';
 import { LessonUpdateRequest } from '../../dtos/lesson-update-request';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-course-lessons-management-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, DragDropModule],
   templateUrl: './course-lessons-management-page.html',
   styleUrls: ['./course-lessons-management-page.css']
 })
@@ -32,6 +34,10 @@ export class CourseLessonsManagementPage {
   editingLessonId = signal<number | null>(null);
   editingLessonValue = signal('');
   editingField = signal<'title' | 'slug' | null>(null);
+
+  // Reordering
+  hasUnsavedOrder = signal(false);
+  isSavingOrder = signal(false);
 
   constructor(
     private route: ActivatedRoute,
@@ -62,6 +68,7 @@ export class CourseLessonsManagementPage {
       next: (lessons: LessonMetadataResponse[]) => {
         this.lessons.set(lessons);
         this.isLoading.set(false);
+        this.hasUnsavedOrder.set(false); // Reset after loading
       },
       error: (err: unknown) => {
         this.error.set('Failed to load lessons');
@@ -98,6 +105,65 @@ export class CourseLessonsManagementPage {
         console.error(err);
       }
     });
+  }
+
+  /**
+   * Handle drag and drop reordering
+   */
+  onDropLesson(event: CdkDragDrop<LessonMetadataResponse[]>) {
+    if (event.previousIndex === event.currentIndex) {
+      return; // No change
+    }
+
+    // Update local array
+    const lessonsList = [...this.lessons()];
+    moveItemInArray(lessonsList, event.previousIndex, event.currentIndex);
+    
+    // Update position numbers visually
+    lessonsList.forEach((lesson, index) => {
+      lesson.position = index + 1;
+    });
+
+    this.lessons.set(lessonsList);
+    this.hasUnsavedOrder.set(true); // Mark as having unsaved changes
+  }
+
+  /**
+   * Save the new order to backend
+   */
+  saveOrder() {
+    if (!this.hasUnsavedOrder()) {
+      return;
+    }
+
+    this.isSavingOrder.set(true);
+    const orderedIds = this.lessons().map(l => l.id);
+
+    this.lessonService.reorderLessons(orderedIds).subscribe({
+      next: () => {
+        this.hasUnsavedOrder.set(false);
+        this.isSavingOrder.set(false);
+        this.error.set(null);
+        console.log('Lesson order saved successfully');
+      },
+      error: (err) => {
+        this.error.set('Failed to save new order');
+        this.isSavingOrder.set(false);
+        console.error('Error saving order:', err);
+        // Reload to restore correct order from server
+        this.loadLessons();
+      }
+    });
+  }
+
+  /**
+   * Cancel reordering and reload original order
+   */
+  cancelReorder() {
+    if (!confirm('Discard changes to lesson order?')) {
+      return;
+    }
+    this.loadLessons();
   }
 
   /**
@@ -200,7 +266,7 @@ export class CourseLessonsManagementPage {
     if (!confirm(`Are you sure you want to delete "${title}"?`)) return;
 
     this.lessonService.removeLesson(lessonId).subscribe({
-      next: () => this.lessons.update(list => list.filter(l => l.id !== lessonId)),
+      next: () => this.loadLessons(), // Reload to update positions
       error: (err) => {
         this.error.set('Failed to delete lesson');
         console.error(err);

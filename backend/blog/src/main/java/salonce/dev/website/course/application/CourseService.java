@@ -69,10 +69,12 @@ public class CourseService {
     }
 
     @Transactional
-    public void deleteCourse(AccountPrincipal principal, Long courseId){
+    public void deleteCourse(AccountPrincipal principal, Long courseId) {
         accountService.requireAdminOrEditor(principal);
         Course course = courseRepository.findById(courseId).orElseThrow(CourseNotFound::new);
+        int deletedPosition = course.getPosition();
         courseRepository.delete(course);
+        courseRepository.shiftPositionsAfterDeletion(deletedPosition);
     }
 
     private int getNextCourseOrderIndex() {
@@ -132,10 +134,13 @@ public class CourseService {
     }
 
     @Transactional
-    public void deleteLesson(AccountPrincipal principal, Long lessonId){
+    public void deleteLesson(AccountPrincipal principal, Long lessonId) {
         accountService.requireAdminOrEditor(principal);
         Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(LessonNotFound::new);
+        Integer deletedPosition = lesson.getPosition();
+        Long courseId = lesson.getCourse().getId();
         lessonRepository.delete(lesson);
+        lessonRepository.shiftPositionsAfterDeletion(courseId, deletedPosition);
     }
 
     @Transactional
